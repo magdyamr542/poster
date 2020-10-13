@@ -25,6 +25,8 @@ export const checkRole = (roles: Roles[]) => {
       res
         .status(HTTPSTATUS.NOT_AUTHORIZED)
         .send({ msg: HTTPMSG.NOT_AUTHORIZED_TO_ACCESS_RECORDS });
+
+      console.log("this is bad some times wsf   sdffe ");
     }
 
     // if authorized then call the handler
