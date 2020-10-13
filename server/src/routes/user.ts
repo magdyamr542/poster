@@ -5,6 +5,11 @@ import { checkJwt, checkRole } from "../middlewares/authMiddleware";
 const router = Router();
 
 const rolesWhichHaveAccessToRecords = [Roles.ADMIN]; // you can extend this to another rules you like
+
+router.get("/", (req, res) => {
+  res.send("coming from getting the user");
+});
+
 router.get(
   "/getUsers",
   [checkJwt, checkRole(rolesWhichHaveAccessToRecords)],

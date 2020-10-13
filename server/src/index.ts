@@ -22,6 +22,7 @@ const main = async () => {
   app.use(cors());
   app.use(express.json());
   // connect to the database
+
   await connectDB("poster");
 
   app.use("/", router); // entry point to all the different routes of the app

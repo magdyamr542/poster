@@ -8,6 +8,7 @@ WORKDIR /usr/src/app
 # where available (npm@5+)
 COPY package*.json ./
 
+RUN npm install --global typescript 
 RUN npm install -y 
 # If you are building your code for production
 # RUN npm ci --only=production
@@ -15,4 +16,5 @@ RUN npm install -y
 # Bundle app source
 COPY . .
 
-CMD [ "npm" , "run" , "dev" ]
+EXPOSE 4000
+CMD [ "npm" , "run" , "dev:watch" ]
