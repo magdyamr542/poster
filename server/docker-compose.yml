@@ -16,3 +16,5 @@ services:
     ports:
       - "27018:27017"
     command: --quiet
+    logging:
+      driver: "none"

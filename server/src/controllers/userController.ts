@@ -86,7 +86,6 @@ export class UserController {
   // Get all the users of the db
   static getAllUsers = async (req: Request, res: Response) => {
     let users = await User.find();
-
     User.find()
       .then((users) => {
         res

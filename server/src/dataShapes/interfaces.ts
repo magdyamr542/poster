@@ -9,9 +9,10 @@ export interface UserInterface extends mongoose.Document {
 }
 
 export interface PostInterface extends mongoose.Document {
-  authorId: string;
-  title: string;
+  userId: string;
+  title?: string;
   content: string;
+  _id: string;
 }
 
 export interface jwtPayload {

@@ -14,6 +14,11 @@ export enum HTTPMSG {
   LOG_IN_SUCCESS = "User logged in successfully",
   TOKEN_NOT_VALID = "Your Token is not valid. you need to sign in",
   NOT_AUTHORIZED_TO_ACCESS_RECORDS = "Your are not authorized to access these records",
+  NO_ID_PROVIDED = "please provide the id of the user",
+  POST_DB_ERROR = "Posts could not be retrieved from the db",
+  POSTS_DELETED = "Posts were deleted successfully",
+  POSTS_CREATION_ERROR = "The post could not be created",
+  POST_CREATED = "The Post was created successfully",
 }
 
 export enum HTTPSTATUS {

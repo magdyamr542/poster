@@ -10,7 +10,13 @@ import { generateToken } from "../utils/authUtils";
 export const checkRole = (roles: Roles[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // get the user by its id delivered to us from the checkJwt middleware
-    const id = res.locals.userId;
+    const id: string = res.locals.userId;
+    if (!id) {
+      res
+        .status(HTTPSTATUS.NOT_AUTHORIZED)
+        .send({ msg: HTTPMSG.USER_NOT_FOUND });
+      return;
+    }
     const user = await User.findById(id);
     if (!user) {
       res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.USER_NOT_FOUND });
@@ -20,13 +26,9 @@ export const checkRole = (roles: Roles[]) => {
     let role = user.role;
     if (roles.indexOf(role!) == -1) {
       // this user does not have access to the entries.
-      console.log("my role", role, user);
-
       res
         .status(HTTPSTATUS.NOT_AUTHORIZED)
         .send({ msg: HTTPMSG.NOT_AUTHORIZED_TO_ACCESS_RECORDS });
-
-      console.log("this is the middle man");
     }
 
     // if authorized then call the handler
@@ -34,7 +36,7 @@ export const checkRole = (roles: Roles[]) => {
   };
 };
 
-// validating the jwt
+// validating the jwt and sets the user id on the res locals
 export const checkJwt = async (
   req: Request,
   res: Response,
