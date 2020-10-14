@@ -5,7 +5,7 @@ export enum Roles {
 
 export enum HTTPMSG {
   USER_EXISTS = "A user with these Details already exsists.",
-  DB_ERROR = "The User could not be saved in the db",
+  DB_ERROR = "Error with the Database",
   USER_CREATED = "The User was created successfully",
   ID_MISSING = "Please insert the user id to get the user",
   USER_NOT_FOUND = "There is no such user in the db",
@@ -19,6 +19,9 @@ export enum HTTPMSG {
   POSTS_DELETED = "Posts were deleted successfully",
   POSTS_CREATION_ERROR = "The post could not be created",
   POST_CREATED = "The Post was created successfully",
+  MISSING_ARGS = "Make sure to put the right data in the body of the request like the id!!",
+  POST_DELETED = "Post was deleted successfully",
+  POST_NOT_FOUND = "Post was not found",
 }
 
 export enum HTTPSTATUS {

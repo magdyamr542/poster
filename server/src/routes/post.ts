@@ -1,6 +1,10 @@
 import { Router } from "express";
 import { PostController } from "../controllers/PostController";
-import { checkJwt, checkRole } from "../middlewares/authMiddleware";
+import {
+  checkJwt,
+  checkRole,
+  postDeleteAuth,
+} from "../middlewares/authMiddleware";
 const router = Router();
 router.get("/", (req, res) => {
   res.send("coming from getting the posts");
@@ -15,4 +19,9 @@ router.delete(
   PostController.deletePosts
 );
 
+router.delete(
+  "/deletePost",
+  [checkJwt, postDeleteAuth],
+  PostController.deletePost
+);
 export { router as post };

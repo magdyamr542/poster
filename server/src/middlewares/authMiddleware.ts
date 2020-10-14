@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { verify } from "jsonwebtoken";
 import { HTTPMSG, HTTPSTATUS, Roles } from "../dataShapes/enums";
 import { jwtPayload } from "../dataShapes/interfaces";
+import { Post } from "../models/Post.model";
 import { User } from "../models/User.model";
 import { generateToken } from "../utils/authUtils";
 
@@ -11,12 +12,6 @@ export const checkRole = (roles: Roles[]) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // get the user by its id delivered to us from the checkJwt middleware
     const id: string = res.locals.userId;
-    if (!id) {
-      res
-        .status(HTTPSTATUS.NOT_AUTHORIZED)
-        .send({ msg: HTTPMSG.USER_NOT_FOUND });
-      return;
-    }
     const user = await User.findById(id);
     if (!user) {
       res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.USER_NOT_FOUND });
@@ -60,4 +55,53 @@ export const checkJwt = async (
   const newToken = await generateToken(jwtPayload);
   res.setHeader("token", newToken);
   next(); // call the next function
+};
+
+/* Make sure only the admin or the one who created the post can actually delete it */
+export const postDeleteAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  // if admin then let him do what he wants
+  if (await isAdmin(res.locals.userId)) {
+    next();
+    return;
+  }
+  // if not then it should be the user who created this post to be able to delete it
+
+  Post.findById({ _id: req.body.postId })
+    .then((post) => {
+      if (post && post.userId === res.locals.userId) {
+        next();
+        return;
+      } else if (!post) {
+        // the post is null and not found
+        res
+          .status(HTTPSTATUS.BAD_REQUEST)
+          .send({ msg: HTTPMSG.POST_NOT_FOUND });
+        return;
+      } else {
+        // the post is found but the use has no access
+        res
+          .status(HTTPSTATUS.NOT_AUTHORIZED)
+          .send({ msg: HTTPMSG.NOT_AUTHORIZED_TO_ACCESS_RECORDS });
+        return;
+      }
+    })
+    .catch((e) => {
+      res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR });
+      return;
+    });
+};
+
+const isAdmin = async (id: string) => {
+  const user = await User.findById(id);
+  if (!user) {
+    return false;
+  }
+  // found the user
+  let role = user.role;
+  if (role === Roles.ADMIN) return true;
+  return false;
 };
