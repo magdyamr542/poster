@@ -3,13 +3,23 @@ services:
   poster_server:
     container_name: poster_server
     restart: always
-    build: ./
+    build: ./server/
     ports:
       - "4000:4000"
     volumes:
-      - ./:/usr/src/app
+      - ./server:/usr/src/app
     links:
       - poster_db
+
+  poster_client:
+    container_name: poster_client
+    restart: always
+    build: ./client/
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./client:/usr/src/app
+
   poster_db:
     container_name: poster_db
     image: mongo
