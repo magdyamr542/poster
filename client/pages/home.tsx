@@ -1,12 +1,14 @@
 import * as React from "react";
+import { Layout } from "../component/Layout";
 import { NavbarLayout } from "../component/NavbarLayout";
 import { AuthService } from "../services/AuthService";
 interface props {}
 const home: React.FC<props> = () => {
-  const currentUer = AuthService.getCurrentLoggedInUser();
   return (
     <>
-      <NavbarLayout></NavbarLayout>
+      <Layout>
+        <div>hello</div>
+      </Layout>
     </>
   );
 };

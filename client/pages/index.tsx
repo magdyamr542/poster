@@ -1,5 +1,5 @@
 import * as React from "react";
 const main = () => {
-    return <div>hello</div>
- };
+  return <h1>Simple Welcome page</h1>;
+};
 export default main;
