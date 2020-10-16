@@ -13,4 +13,13 @@ export interface AuthResponse {
   msg?: string;
   data: object;
   err?: string;
+  token?: string;
+}
+
+export interface ParsedJwtToken {
+  token: string;
+  exp: number;
+  iat: number;
+  id: string;
+  username: string;
 }

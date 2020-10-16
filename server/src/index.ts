@@ -18,7 +18,10 @@ declare global {
 // getting the middlewares
 const main = async () => {
   const app = express();
-  app.use(cors());
+  const corsOptions = {
+    exposedHeaders: "token", // to be able to access it on the client
+  };
+  app.use(cors(corsOptions));
   app.use(express.json());
   // connect to the database
   await connectDB("poster");

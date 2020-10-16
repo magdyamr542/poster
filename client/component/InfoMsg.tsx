@@ -11,7 +11,7 @@ export const InfoMsg: React.FC<InfoMsgProps> = ({ msg, color }) => {
       style={{
         color,
         fontSize: "20px",
-        margin: "5px",
+        margin: "15px",
         whiteSpace: "pre-wrap",
       }}
     >

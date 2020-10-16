@@ -81,6 +81,7 @@ export class UserController {
 
     // now all good. sign the token and log the user in
     const token = await generateToken({ username: user!.name, id: user!._id });
+    res.setHeader("token", token);
     res.status(HTTPSTATUS.SUCCESS).send({ msg: HTTPMSG.LOG_IN_SUCCESS, token });
   };
 

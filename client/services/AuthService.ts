@@ -13,7 +13,11 @@ export class AuthService {
           data: req.data,
           url: req.url,
         });
-        resolve({ msg: "User Signed up successfully", data: res.data });
+        resolve({
+          msg: "User Signed up successfully" + res.headers["auth"],
+          data: res.data,
+          token: res.headers["token"],
+        });
       } catch (e) {
         reject({ data: {}, msg: e.response.data.err, err: e });
       }

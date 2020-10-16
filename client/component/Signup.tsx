@@ -1,15 +1,8 @@
-import {
-  Button,
-  CircularProgress,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import * as React from "react";
 import { useState } from "react";
 import TextInput from "./TextInput";
-import axios, { AxiosAdapter } from "axios";
-import { MsgInfoColors, Server_Routes } from "../interfaces/enums";
+import { MsgInfoColors, pageRoutes, Server_Routes } from "../interfaces/enums";
 import { InfoMsg } from "./InfoMsg";
 import {
   AuthResponse,
@@ -17,6 +10,10 @@ import {
   InfoMsgInterface,
 } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
+import { useRouter } from "next/router";
+import * as jsCookie from "js-cookie";
+import { setCookieToClient } from "../services/cookieService";
+
 export const Signup: React.FC<{}> = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,6 +24,8 @@ export const Signup: React.FC<{}> = () => {
     msg: "",
     color: "green",
   });
+
+  const router = useRouter();
 
   // showing the info msg for some time
   const showMsgThenHide = (infomsg: InfoMsgInterface, time: number) => {
@@ -49,9 +48,13 @@ export const Signup: React.FC<{}> = () => {
 
     AuthService.signup(requets)
       .then((d) => {
+        console.log(d.data);
         // show the msg of creation and hide the progress bar
         setShowProgressBar(false);
         showMsgThenHide({ msg: d.msg!, color: MsgInfoColors.SUCCESS }, 3000);
+        // redirect the user to the sign in page which is very similar
+        router.push(pageRoutes.SIGN_IN_PAGE);
+        setCookieToClient("token", d.token!);
       })
       .catch((e: AuthResponse) => {
         // set an error msg
