@@ -3,6 +3,7 @@ export enum Server_Routes {
   LOG_IN = "http://localhost:4000/auth/login",
   LOG_OUT = "http://localhost:4000/auth/logout",
   GET_ALL_USERS = "http://localhost:4000/user/getUsers",
+  GET_ALL_POSTS = "http://localhost:4000/post/getPosts",
 }
 
 export enum MsgInfoColors {

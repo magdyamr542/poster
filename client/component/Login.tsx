@@ -20,8 +20,10 @@ import { useRouter } from "next/router";
 import NextLink from "next/link";
 import { setCookieToClient } from "../services/cookieService";
 import { TIME_TO_SHOW_INFO_MSG } from "../consts";
+import { AxiosRequestService } from "../services/AxiosRequestService";
 
 export const Login: React.FC<{}> = () => {
+  // setup
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +33,6 @@ export const Login: React.FC<{}> = () => {
     msg: "",
     color: "green",
   });
-
   const router = useRouter();
 
   // showing the info msg for some time
@@ -47,12 +48,11 @@ export const Login: React.FC<{}> = () => {
     e.preventDefault();
     // show the progress bar and an info msg of loggin in
     setShowProgressBar(true);
-    const requets: AxiosRequest = {
-      method: "post",
-      data: { name, email, password },
-      url: Server_Routes.LOG_IN,
-    };
-
+    const requets: AxiosRequest = AxiosRequestService.loginRequest(
+      name,
+      email,
+      password
+    );
     AuthService.login(requets)
       .then((d) => {
         // show the msg of creation and hide the progress bar

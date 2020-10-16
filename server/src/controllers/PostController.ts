@@ -41,6 +41,7 @@ export class PostController {
     newPost.content = content;
     newPost.userId = res.locals.userId as string;
     if (title) newPost.title = title;
+    console.log(newPost);
     // save the post
     newPost
       .save()

@@ -14,7 +14,7 @@ export class AuthService {
           url: req.url,
         });
         resolve({
-          msg: "User Signed up successfully" + res.headers["auth"],
+          msg: "User Signed up successfully",
           data: res.data,
           token: res.headers["token"],
         });

@@ -13,6 +13,7 @@ import { AuthService } from "../services/AuthService";
 import { useRouter } from "next/router";
 import { setCookieToClient } from "../services/cookieService";
 import { TIME_TO_SHOW_INFO_MSG } from "../consts";
+import { AxiosRequestService } from "../services/AxiosRequestService";
 
 export const Signup: React.FC<{}> = () => {
   const [name, setName] = useState("");
@@ -40,13 +41,8 @@ export const Signup: React.FC<{}> = () => {
     e.preventDefault();
     // show the progress bar and an info msg of loggin in
     setShowProgressBar(true);
-    const requets: AxiosRequest = {
-      method: "post",
-      data: { name, email, password },
-      url: Server_Routes.SIGN_UP,
-    };
-
-    AuthService.signup(requets)
+    const request = AxiosRequestService.signupRequest(name, email, password);
+    AuthService.signup(request)
       .then((d) => {
         console.log(d.data);
         // show the msg of creation and hide the progress bar

@@ -7,6 +7,7 @@ export interface AxiosRequest {
   method: AxiosMethod;
   url: string;
   data?: object;
+  headers?: object;
 }
 
 export interface AuthResponse {
@@ -27,4 +28,11 @@ export interface ParsedJwtToken {
 export interface CurrentUser {
   username: string;
   id: string;
+}
+
+export interface Post {
+  _id: string;
+  title: string;
+  content: string;
+  userId: string;
 }
