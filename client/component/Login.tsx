@@ -1,4 +1,10 @@
-import { Button, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Link,
+  Typography,
+} from "@material-ui/core";
 import * as React from "react";
 import { useState } from "react";
 import TextInput from "./TextInput";
@@ -11,9 +17,10 @@ import {
 } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
 import { useRouter } from "next/router";
-import * as jsCookie from "js-cookie";
+import NextLink from "next/link";
 import { setCookieToClient } from "../services/cookieService";
 import { TIME_TO_SHOW_INFO_MSG } from "../consts";
+
 export const Login: React.FC<{}> = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -70,50 +77,76 @@ export const Login: React.FC<{}> = () => {
   };
   return (
     <>
-      <div className="singup_label" style={{ textAlign: "center" }}>
-        <Typography component="h1" variant="h5">
-          Sign In
-        </Typography>
-      </div>
-      <form onSubmit={hanldeFormSubmit} className="signup_form">
-        <TextInput
-          label="Name"
-          type="text"
-          required={true}
-          selector="name_input"
-          onValueChange={(val) => setName(val)}
-        />
-        <TextInput
-          label="Email"
-          type="text"
-          required={true}
-          selector="email_input"
-          onValueChange={(val) => setEmail(val)}
-        />
-        <TextInput
-          label="Password"
-          type="text"
-          required={true}
-          selector="password_input"
-          onValueChange={(val) => setPassword(val)}
-        />
-        <Button type="submit" fullWidth variant="contained" color="primary">
-          Login
-        </Button>
-      </form>
+      <div className="sign_in_container">
+        <div className="singup_label" style={{ textAlign: "center" }}>
+          <Typography component="h1" variant="h5">
+            Sign In
+          </Typography>
+        </div>
+        <form onSubmit={hanldeFormSubmit} className="signup_form">
+          <TextInput
+            label="Name"
+            type="text"
+            required={true}
+            selector="name_input"
+            onValueChange={(val) => setName(val)}
+          />
+          <TextInput
+            label="Email"
+            type="text"
+            required={true}
+            selector="email_input"
+            onValueChange={(val) => setEmail(val)}
+          />
+          <TextInput
+            label="Password"
+            type="text"
+            required={true}
+            selector="password_input"
+            onValueChange={(val) => setPassword(val)}
+          />
+          <Button type="submit" fullWidth variant="contained" color="primary">
+            Login
+          </Button>
+          {/* sign up if not having an account or reset the password if forgot it */}
+          <Grid
+            container
+            style={{
+              marginTop: 10,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+            }}
+          >
+            <Grid item xs>
+              <NextLink href="/login">
+                <Link href="#" variant="body2" style={{ float: "left" }}>
+                  Forgot password?
+                </Link>
+              </NextLink>
+            </Grid>
+            <Grid item>
+              <NextLink href="/register">
+                <Link href="#" variant="body2" style={{ float: "right" }}>
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </NextLink>
+            </Grid>
+          </Grid>
+        </form>
 
-      {/* The notification */}
-      <CircularProgress
-        style={{
-          margin: "20px auto",
-          display: showProgressBar ? "block" : "none",
-        }}
-      />
-      <div
-        className="info_msg"
-        style={{ display: showNotificationMsg ? "block" : "none" }}
-      >
-        <InfoMsg {...infoMsg} />
+        {/* The notification */}
+        <CircularProgress
+          style={{
+            margin: "20px auto",
+            display: showProgressBar ? "block" : "none",
+          }}
+        />
+        <div
+          className="info_msg"
+          style={{ display: showNotificationMsg ? "block" : "none" }}
+        >
+          <InfoMsg {...infoMsg} />
+        </div>
       </div>
     </>
   );
