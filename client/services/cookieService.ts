@@ -1,14 +1,22 @@
 import * as jsCookie from "js-cookie";
 import { ParsedJwtToken } from "../interfaces/types";
 const domino = require("domain");
+
+export const cookieAttributes: jsCookie.CookieAttributes = {
+  sameSite: "strict",
+  secure: true,
+};
 export const setCookieToClient = (name: string, value: string) => {
-  jsCookie.set(name, value, { sameSite: "strict", secure: true });
+  jsCookie.set(name, value, cookieAttributes);
 };
 
 export const getCookie = (name: string) => {
   return jsCookie.get(name);
 };
 
+export const removeCookie = (name: string) => {
+  return jsCookie.remove(name, cookieAttributes);
+};
 const jwtDecode = (t: string) => {
   let token: ParsedJwtToken = {} as ParsedJwtToken;
   token.token = t;
