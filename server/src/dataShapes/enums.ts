@@ -8,7 +8,7 @@ export enum HTTPMSG {
   DB_ERROR = "Error with the Database",
   USER_CREATED = "The User was created successfully",
   ID_MISSING = "Please insert the user id to get the user",
-  USER_NOT_FOUND = "There is no such user in the db",
+  USER_NOT_FOUND = "There is no such user",
   NOT_ABLE_TO_DELETE_USERS = "The Users could not be deleted",
   WRONG_PASSWORD = "Password is wrong",
   LOG_IN_SUCCESS = "User logged in successfully",

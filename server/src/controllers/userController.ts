@@ -28,7 +28,6 @@ export class UserController {
       res.status(HTTPSTATUS.USER_CONFLICT).send({ err: HTTPMSG.USER_EXISTS });
       return;
     }
-
     // if not then hash the password and store it in the db
     let hashedPassword = await hashPassword(
       password,
@@ -71,8 +70,8 @@ export class UserController {
 
     // if not then compare the given password with the stored hashed one
     const user = await User.findOne({ name, email });
-    let arePasswordsTheSam = await comparePassword(password, user!.password);
-    if (!arePasswordsTheSam) {
+    let arePasswordsTheSame = await comparePassword(password, user!.password);
+    if (!arePasswordsTheSame) {
       res
         .status(HTTPSTATUS.NOT_AUTHORIZED)
         .send({ err: HTTPMSG.WRONG_PASSWORD });
@@ -82,7 +81,7 @@ export class UserController {
     // now all good. sign the token and log the user in
     const token = await generateToken({ username: user!.name, id: user!._id });
     res.setHeader("token", token);
-    res.status(HTTPSTATUS.SUCCESS).send({ msg: HTTPMSG.LOG_IN_SUCCESS, token });
+    res.status(HTTPSTATUS.SUCCESS).send({ msg: HTTPMSG.LOG_IN_SUCCESS });
   };
 
   // Get all the users of the db

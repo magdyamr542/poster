@@ -1,19 +1,22 @@
+import { Grid } from "@material-ui/core";
 import * as React from "react";
-import { getCookie, parseJwtToken } from "../services/cookieService";
-import * as jsCooke from "js-cookie";
-interface loginProps {}
-
-export const login: React.FC<loginProps> = ({}) => {
-  // get the username based on the token
-  let username = "";
-  if (process.browser) {
-    username = parseJwtToken(jsCooke.get("token")!).username;
-  }
+import { Login } from "../component/Login";
+import { Signup } from "../component/Signup";
+interface props {}
+const login: React.FC<props> = () => {
   return (
-    <div>
-      {" "}
-      <h1>hello {username || "sfsdf"}</h1>{" "}
-    </div>
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justify="center"
+      style={{ minHeight: "50vh" }}
+    >
+      <Grid item xs={3} style={{ textAlign: "center" }}>
+        <Login />
+      </Grid>
+    </Grid>
   );
 };
 

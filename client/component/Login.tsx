@@ -11,10 +11,10 @@ import {
 } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
 import { useRouter } from "next/router";
+import * as jsCookie from "js-cookie";
 import { setCookieToClient } from "../services/cookieService";
 import { TIME_TO_SHOW_INFO_MSG } from "../consts";
-
-export const Signup: React.FC<{}> = () => {
+export const Login: React.FC<{}> = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,23 +43,23 @@ export const Signup: React.FC<{}> = () => {
     const requets: AxiosRequest = {
       method: "post",
       data: { name, email, password },
-      url: Server_Routes.SIGN_UP,
+      url: Server_Routes.LOG_IN,
     };
 
-    AuthService.signup(requets)
+    AuthService.login(requets)
       .then((d) => {
-        console.log(d.data);
         // show the msg of creation and hide the progress bar
         setShowProgressBar(false);
         showMsgThenHide(
           { msg: d.msg!, color: MsgInfoColors.SUCCESS },
           TIME_TO_SHOW_INFO_MSG
         );
-        // redirect the user to the sign in page which is very similar
-        router.push(pageRoutes.SIGN_IN_PAGE);
         setCookieToClient("token", d.token!);
+        // redirect the user to the Welcome Page
+        router.push(pageRoutes.HOME_PAGE);
       })
       .catch((e: AuthResponse) => {
+        console.log({ e });
         // set an error msg
         setShowProgressBar(false);
         showMsgThenHide(
@@ -72,7 +72,7 @@ export const Signup: React.FC<{}> = () => {
     <>
       <div className="singup_label" style={{ textAlign: "center" }}>
         <Typography component="h1" variant="h5">
-          Sign Up
+          Sign In
         </Typography>
       </div>
       <form onSubmit={hanldeFormSubmit} className="signup_form">
@@ -98,7 +98,7 @@ export const Signup: React.FC<{}> = () => {
           onValueChange={(val) => setPassword(val)}
         />
         <Button type="submit" fullWidth variant="contained" color="primary">
-          Sign Up
+          Login
         </Button>
       </form>
 

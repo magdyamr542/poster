@@ -2,7 +2,7 @@ import * as jsCookie from "js-cookie";
 import { ParsedJwtToken } from "../interfaces/types";
 const domino = require("domain");
 export const setCookieToClient = (name: string, value: string) => {
-  jsCookie.set(name, value);
+  jsCookie.set(name, value, { sameSite: "strict", secure: true });
 };
 
 export const getCookie = (name: string) => {

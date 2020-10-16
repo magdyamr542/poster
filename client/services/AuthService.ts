@@ -1,7 +1,7 @@
-import { AuthResponse, AxiosRequest } from "../interfaces/types";
-
+import { AuthResponse, AxiosRequest, CurrentUser } from "../interfaces/types";
+import * as jsCookie from "js-cookie";
 import axios from "axios";
-import { resolve } from "path";
+import { parseJwtToken, getCookie } from "./cookieService";
 
 /* logging in out and signing up the user */
 export class AuthService {
@@ -19,8 +19,37 @@ export class AuthService {
           token: res.headers["token"],
         });
       } catch (e) {
-        reject({ data: {}, msg: e.response.data.err, err: e });
+        reject({ data: {}, msg: "User Could not be created", err: e });
       }
     });
+  };
+
+  static login = (req: AxiosRequest): Promise<AuthResponse> => {
+    return new Promise<AuthResponse>(async (resolve, reject) => {
+      try {
+        const res = await axios({
+          method: req.method,
+          data: req.data,
+          url: req.url,
+        });
+        resolve({
+          msg: "User Signed In successfully , Redirecting to Home Page...",
+          data: res.data,
+          token: res.headers["token"],
+        });
+      } catch (e) {
+        if (e.response) {
+          reject({ data: {}, msg: e.response.data.err, err: e });
+        }
+      }
+    });
+  };
+
+  static getCurrentLoggedInUser = (): CurrentUser | null => {
+    if (process.browser) {
+      const res = parseJwtToken(getCookie("token")!);
+      return { username: res.username, id: res.id };
+    }
+    return null;
   };
 }

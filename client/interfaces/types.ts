@@ -23,3 +23,8 @@ export interface ParsedJwtToken {
   id: string;
   username: string;
 }
+
+export interface CurrentUser {
+  username: string;
+  id: string;
+}

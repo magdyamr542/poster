@@ -1,9 +1,14 @@
 {
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "preserve",
     "target": "es6",
     "module": "commonjs",
-    "lib": ["dom", "es2017", "esnext.asynciterable", "es6"],
+    "lib": [
+      "dom",
+      "es2017",
+      "esnext.asynciterable",
+      "es6"
+    ],
     "sourceMap": true,
     "outDir": "./dist",
     "moduleResolution": "node",
@@ -22,9 +27,19 @@
     "allowSyntheticDefaultImports": false,
     "skipLibCheck": true,
     "emitDecoratorMetadata": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "exclude": ["node_modules"],
-  "include": ["./**/*.tsx", "./**/*.ts"],
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./**/*.tsx",
+    "./**/*.ts"
+  ],
   "typingOptions": {
     "enableAutoDiscovery": true
   }
