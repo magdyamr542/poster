@@ -25,7 +25,7 @@ export class UserController {
 
     // do we have a similar user
     if (similarUserExists) {
-      res.status(HTTPSTATUS.USER_CONFLICT).send({ msg: HTTPMSG.USER_EXISTS });
+      res.status(HTTPSTATUS.USER_CONFLICT).send({ err: HTTPMSG.USER_EXISTS });
       return;
     }
 
@@ -41,7 +41,8 @@ export class UserController {
     try {
       await newUser.save();
     } catch (e) {
-      res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR });
+      console.log(e);
+      res.status(HTTPSTATUS.BAD_REQUEST).send({ err: HTTPMSG.DB_ERROR });
       return;
     }
 
@@ -64,7 +65,7 @@ export class UserController {
 
     // if no such user exists
     if (!similarUserExists) {
-      res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.USER_NOT_FOUND });
+      res.status(HTTPSTATUS.NOT_FOUND).send({ err: HTTPMSG.USER_NOT_FOUND });
       return;
     }
 
@@ -74,7 +75,7 @@ export class UserController {
     if (!arePasswordsTheSam) {
       res
         .status(HTTPSTATUS.NOT_AUTHORIZED)
-        .send({ msg: HTTPMSG.WRONG_PASSWORD });
+        .send({ err: HTTPMSG.WRONG_PASSWORD });
       return;
     }
 
@@ -93,20 +94,20 @@ export class UserController {
           .send({ users: users.map(UserController.getUserPublicFields) });
       })
       .catch((e) => {
-        res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR });
+        res.status(HTTPSTATUS.BAD_REQUEST).send({ err: HTTPMSG.DB_ERROR });
       });
   };
 
   /* Getting a user by its id */
   static getUserById = async (req: Request, res: Response) => {
     if (!req.body.id) {
-      res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.ID_MISSING });
+      res.status(HTTPSTATUS.BAD_REQUEST).send({ err: HTTPMSG.ID_MISSING });
       return;
     }
     let id = req.body.id;
     let user = await User.findOne({ _id: id });
     if (!user) {
-      res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.USER_NOT_FOUND });
+      res.status(HTTPSTATUS.NOT_FOUND).send({ err: HTTPMSG.USER_NOT_FOUND });
       return;
     }
     // here we found the user
@@ -128,7 +129,7 @@ export class UserController {
         // here we found the user
         res
           .status(HTTPSTATUS.BAD_REQUEST)
-          .send({ msg: HTTPMSG.NOT_ABLE_TO_DELETE_USERS });
+          .send({ err: HTTPMSG.NOT_ABLE_TO_DELETE_USERS });
       });
   };
 

@@ -1,5 +1,5 @@
-  const index = () => {
-return <div>the main page</div>
-  }
-
-export default index;
+import * as React from "react";
+const main = () => {
+    return <div>hello</div>
+ };
+export default main;

@@ -6,7 +6,6 @@ const user = new Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   role: { type: Roles, default: Roles.NORMAL, required: false },
-  _id: { type: String, default: new Types.ObjectId(), required: false },
 });
 
 export const User = model<UserInterface>("User", user);

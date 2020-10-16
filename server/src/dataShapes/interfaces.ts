@@ -4,8 +4,8 @@ export interface UserInterface extends mongoose.Document {
   name: string;
   email: string;
   password: string;
-  _id: string;
   role?: Roles;
+  _id: string;
 }
 
 export interface PostInterface extends mongoose.Document {

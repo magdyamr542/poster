@@ -38,6 +38,7 @@ export const checkJwt = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("in checkjwt");
   // get the token
   let token = req.headers["auth"] as string;
   let jwtPayload: jwtPayload;
