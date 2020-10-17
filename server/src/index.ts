@@ -3,6 +3,7 @@ import { router } from "./routes/routes";
 import cors = require("cors");
 require("dotenv").config();
 import express = require("express");
+const bodyParser = require("body-parser");
 
 // for env vars
 declare global {
@@ -23,6 +24,7 @@ const main = async () => {
   };
   app.use(cors(corsOptions));
   app.use(express.json());
+
   // connect to the database
   await connectDB("poster");
   app.use("/", router); // entry point to all the different routes of the app

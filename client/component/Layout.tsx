@@ -2,9 +2,12 @@ import * as React from "react";
 import { useRedirectIfNotLoggedIn } from "../hooks/authHooks";
 import { AuthService } from "../services/AuthService";
 import { NavbarLayout } from "./NavbarLayout";
+import { Wrapper, WrapperSize } from "./Wrapper";
 
-interface LayoutProps {}
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+interface LayoutProps {
+  size: WrapperSize;
+}
+export const Layout: React.FC<LayoutProps> = ({ children, size }) => {
   useRedirectIfNotLoggedIn(); // redirects the user if he is not logged in
   const currentUser = AuthService.getCurrentLoggedInUser();
   // display loading until redirecting
@@ -14,7 +17,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <NavbarLayout username={currentUser?.username!} />
-      {children}
+      <Wrapper size={size}>{children}</Wrapper>
     </>
   );
 };

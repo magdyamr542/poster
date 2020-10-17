@@ -41,15 +41,10 @@ export class PostController {
     newPost.content = content;
     newPost.userId = res.locals.userId as string;
     if (title) newPost.title = title;
-    console.log(newPost);
     // save the post
     newPost
       .save()
-      .then((post) =>
-        res
-          .status(HTTPSTATUS.SUCCESS)
-          .send({ msg: HTTPMSG.POST_CREATED, post: post })
-      )
+      .then((post) => res.status(HTTPSTATUS.SUCCESS).send({ post: post }))
       .catch((e) =>
         res
           .status(HTTPSTATUS.BAD_REQUEST)

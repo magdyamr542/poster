@@ -1,0 +1,5 @@
+.progress_with_msg_container {
+  display: flex;
+  margin: 30px;
+  align-items: center;
+}

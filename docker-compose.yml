@@ -11,15 +11,6 @@ services:
     links:
       - poster_db
 
-  poster_client:
-    container_name: poster_client
-    restart: always
-    build: ./client/
-    ports:
-      - "4001:4001"
-    volumes:
-      - ./client:/usr/src/app
-
   poster_db:
     container_name: poster_db
     image: mongo
@@ -28,3 +19,12 @@ services:
     command: --quiet
     logging:
       driver: "none"
+
+  poster_client:
+    container_name: poster_client
+    restart: always
+    build: ./client/
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./client:/usr/src/app

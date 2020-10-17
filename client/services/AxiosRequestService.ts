@@ -39,4 +39,16 @@ export class AxiosRequestService {
     };
     return request;
   };
+
+  static getAddPostRequest = (title: string, content: string): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.ADD_POST,
+      data: { title: title, content: content },
+      headers: {
+        auth: getCookie("token"),
+      },
+    };
+    return request;
+  };
 }
