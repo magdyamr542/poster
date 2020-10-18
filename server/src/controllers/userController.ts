@@ -152,4 +152,10 @@ export class UserController {
       _id: user._id,
     };
   };
+
+  static getUserName = async (id: string): Promise<string> => {
+    const name = await User.findById(id);
+    if (name) return name.name;
+    return "";
+  };
 }

@@ -1,13 +1,9 @@
 import classes from "*.module.css";
 import {
-  Box,
-  Button,
   Card,
   CardActionArea,
   CardContent,
-  CardMedia,
   Grid,
-  Hidden,
   Typography,
 } from "@material-ui/core";
 import * as React from "react";
@@ -15,11 +11,11 @@ import * as React from "react";
 interface PostProps {
   title: string;
   content: string;
-  userId: string;
-  _id: string;
+  username?: string; // display in the post ui
+  _id: string; // for removing the post
 }
 
-export const Post: React.FC<PostProps> = ({ title, content, userId, _id }) => {
+export const Post: React.FC<PostProps> = ({ title, content, _id }) => {
   return (
     <Grid item style={{}}>
       <CardActionArea component="a" href="#">
@@ -30,7 +26,7 @@ export const Post: React.FC<PostProps> = ({ title, content, userId, _id }) => {
                 {title}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                {userId}
+                {"currently empty"}
               </Typography>
               <p>{content}</p>
             </CardContent>

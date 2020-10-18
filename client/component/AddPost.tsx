@@ -1,10 +1,14 @@
 import { Button, TextField, Typography } from "@material-ui/core";
 import * as React from "react";
+import { useState } from "react";
 
 interface AddPostProps {}
 
 export const AddPost: React.FC<AddPostProps> = ({}) => {
   const leftAlignPadding = 25;
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
   return (
     <>
       <form
@@ -31,6 +35,7 @@ export const AddPost: React.FC<AddPostProps> = ({}) => {
           className={"add_post_label"}
           label="Title"
           style={{ margin: leftAlignPadding, width: "40%" }}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <TextField
           placeholder="Content ..."
@@ -39,6 +44,7 @@ export const AddPost: React.FC<AddPostProps> = ({}) => {
           rowsMax={Infinity}
           className={"add_post_content"}
           style={{ margin: leftAlignPadding, width: "80%" }}
+          onChange={(e) => setContent(e.target.value)}
         />
         <Button
           type="submit"

@@ -13,6 +13,7 @@ export interface PostInterface extends mongoose.Document {
   title?: string;
   content: string;
   _id: string;
+  username?: string;
 }
 
 export interface jwtPayload {

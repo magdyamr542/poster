@@ -24,7 +24,6 @@ export const Posts: React.FC<PostsProps> = ({}) => {
       content
     );
     const _post = await PostService.addPost(request);
-    console.log(_post);
   };
   useEffect(() => {
     const _posts = fetchPosts()
@@ -40,10 +39,10 @@ export const Posts: React.FC<PostsProps> = ({}) => {
         return (
           <PostComponent
             title={e.title}
-            userId={e.userId}
             content={e.content}
             _id={e._id}
             key={i}
+            username
           ></PostComponent>
         );
       })}

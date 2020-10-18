@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { HTTPMSG, HTTPSTATUS } from "../dataShapes/enums";
 import { PostInterface } from "../dataShapes/interfaces";
 import { Post } from "../models/Post.model";
+import { UserController } from "./userController";
 
 export class PostController {
   /* getting all the posts */
@@ -35,11 +36,13 @@ export class PostController {
   };
 
   /* Adding a post to the db */
-  static addPost = (req: Request, res: Response) => {
+  static addPost = async (req: Request, res: Response) => {
     const { content, title }: PostInterface = req.body;
     let newPost = new Post({});
     newPost.content = content;
     newPost.userId = res.locals.userId as string;
+    const username = await UserController.getUserName(res.locals.userId); // attach the user name to the post
+    newPost.username = username;
     if (title) newPost.title = title;
     // save the post
     newPost
