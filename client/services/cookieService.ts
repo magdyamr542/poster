@@ -1,6 +1,5 @@
 import * as jsCookie from "js-cookie";
 import { ParsedJwtToken } from "../interfaces/types";
-const domino = require("domain");
 
 export const cookieAttributes: jsCookie.CookieAttributes = {
   sameSite: "strict",

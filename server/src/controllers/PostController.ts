@@ -27,7 +27,7 @@ export class PostController {
 
   /* Getting the posts to a specific user */
   static getPostsOfUser = (req: Request, res: Response) => {
-    const userId: string = res.locals.userId; // todo . get the user id from the session
+    const userId: string = res.locals.userId;
     Post.find({ userId })
       .then((posts) => res.status(HTTPSTATUS.SUCCESS).send({ posts }))
       .catch((e) =>

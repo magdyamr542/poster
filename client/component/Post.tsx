@@ -12,6 +12,8 @@ import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface } from "../interfaces/types";
 import { EventsEnum } from "../interfaces/enums";
+import { parseJwtToken } from "../services/cookieService";
+import { AuthService } from "../services/AuthService";
 
 interface PostProps {
   title: string;
@@ -20,6 +22,7 @@ interface PostProps {
   _id: string; // for removing the post
   postEmitter: EventEmitter<PostInterface>; // send notification that a post should be deleted
   createdAt?: Date;
+  userId: string; // used to control which posts this user can delete
 }
 
 export const Post: React.FC<PostProps> = ({
@@ -29,14 +32,21 @@ export const Post: React.FC<PostProps> = ({
   username,
   postEmitter,
   createdAt,
+  userId,
 }) => {
-  const handleHidePost = () => {
-    console.log(postEmitter);
-    postEmitter.emit(EventsEnum.HIDE_POST, { title, content, _id });
+  // get the id of the current user
+  const canDeletePost = (): boolean => {
+    const currentUser = AuthService.getCurrentLoggedInUser();
+    console.log(currentUser, currentUser?.id === userId);
+    return currentUser?.id === userId;
   };
-
+  // hide a post
+  const handleHidePost = () => {
+    postEmitter.emit(EventsEnum.HIDE_POST, { title, content, _id, userId });
+  };
+  // delete a post
   const handleRemovePost = () => {
-    console.log("remove the post");
+    console.log("remove the post", userId);
   };
   return (
     <Grid item style={{ margin: "10px 0" }}>
@@ -60,7 +70,11 @@ export const Post: React.FC<PostProps> = ({
                     />{" "}
                   </IconButton>
 
-                  <IconButton onClick={handleRemovePost} style={{ padding: 0 }}>
+                  <IconButton
+                    onClick={handleRemovePost}
+                    style={{ padding: 0 }}
+                    disabled={!canDeletePost()}
+                  >
                     <DeleteIcon titleAccess={"delete"} />
                   </IconButton>
                 </div>

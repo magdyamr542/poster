@@ -36,4 +36,5 @@ export interface Post {
   content: string;
   username?: string;
   createdAt?: Date;
+  userId: string;
 }
