@@ -6,6 +6,7 @@ const post = new Schema({
   title: { type: String, required: false, default: "No Title" },
   content: { type: String, required: true },
   username: { type: String, required: false },
+  createdAt: { type: Date, required: false, default: Date.now },
 });
 
 export const Post = model<PostInterface>("post", post);

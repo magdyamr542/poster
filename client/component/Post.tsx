@@ -19,6 +19,7 @@ interface PostProps {
   username?: string; // display in the post ui
   _id: string; // for removing the post
   postEmitter: EventEmitter<PostInterface>; // send notification that a post should be deleted
+  createdAt?: Date;
 }
 
 export const Post: React.FC<PostProps> = ({
@@ -27,6 +28,7 @@ export const Post: React.FC<PostProps> = ({
   _id,
   username,
   postEmitter,
+  createdAt,
 }) => {
   const handleHidePost = () => {
     console.log(postEmitter);
@@ -42,7 +44,8 @@ export const Post: React.FC<PostProps> = ({
         <Card style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
             <CardContent>
-              <div className="label_delete_section">
+              {/* post header */}
+              <div className="post_header">
                 <Typography component="h2" variant="h5" display={"inline"}>
                   {title}
                 </Typography>
@@ -62,8 +65,12 @@ export const Post: React.FC<PostProps> = ({
                   </IconButton>
                 </div>
               </div>
+              {/* additional info */}
               <Typography variant="subtitle1" color="textSecondary">
-                {username}
+                <span style={{ marginRight: 12, fontWeight: "bold" }}>
+                  {username}.
+                </span>{" "}
+                <span>{createdAt?.toLocaleString()}</span>
               </Typography>
               <p>{content}</p>
             </CardContent>

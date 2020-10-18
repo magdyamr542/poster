@@ -63,6 +63,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
             key={i}
             username={e.username}
             postEmitter={postEmitter}
+            createdAt={new Date(e.createdAt!.toString())}
           ></PostComponent>
         );
       })}

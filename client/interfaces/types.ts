@@ -35,4 +35,5 @@ export interface Post {
   title: string;
   content: string;
   username?: string;
+  createdAt?: Date;
 }

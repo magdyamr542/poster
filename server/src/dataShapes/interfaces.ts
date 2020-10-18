@@ -14,6 +14,7 @@ export interface PostInterface extends mongoose.Document {
   content: string;
   _id: string;
   username?: string;
+  createdAt?: Date;
 }
 
 export interface jwtPayload {
