@@ -1,4 +1,3 @@
-import classes from "*.module.css";
 import {
   Card,
   CardActionArea,
@@ -15,7 +14,12 @@ interface PostProps {
   _id: string; // for removing the post
 }
 
-export const Post: React.FC<PostProps> = ({ title, content, _id }) => {
+export const Post: React.FC<PostProps> = ({
+  title,
+  content,
+  _id,
+  username,
+}) => {
   return (
     <Grid item style={{}}>
       <CardActionArea component="a" href="#">
@@ -26,7 +30,7 @@ export const Post: React.FC<PostProps> = ({ title, content, _id }) => {
                 {title}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                {"currently empty"}
+                {username}
               </Typography>
               <p>{content}</p>
             </CardContent>

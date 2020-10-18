@@ -26,10 +26,10 @@ export class PostService {
         headers: request.headers,
         data: request.data,
       });
-      return response.data.posts as Post;
+      return response.data.post as Post;
     } catch (e) {
       console.log("Error", e);
-      return { title: "", content: "", userId: "", _id: "" };
+      return { title: "", content: "", _id: "" };
     }
   };
 }

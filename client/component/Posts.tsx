@@ -17,17 +17,9 @@ export const Posts: React.FC<PostsProps> = ({}) => {
     const _posts = await PostService.getAllPosts(request);
     return _posts;
   };
-
-  const addPost = async (title: string, content: string) => {
-    const request: AxiosRequest = AxiosRequestService.getAddPostRequest(
-      title,
-      content
-    );
-    const _post = await PostService.addPost(request);
-  };
   useEffect(() => {
     const _posts = fetchPosts()
-      .then((d) => setPosts(d))
+      .then((d) => setPosts(d.reverse()))
       .catch((e) => console.log("error from posts fetching ", e));
   }, []); // the empty array tells react to only make the api call once on mount and that is it
   if (!posts) return <ProgressWithMsg msg={"loading posts..."} />;
@@ -42,7 +34,7 @@ export const Posts: React.FC<PostsProps> = ({}) => {
             content={e.content}
             _id={e._id}
             key={i}
-            username
+            username={e.username}
           ></PostComponent>
         );
       })}
