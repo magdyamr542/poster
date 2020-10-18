@@ -25,10 +25,17 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   useEffect(() => {
     // if there are handlers dut to component refreshing then do not subscribe
     if (postEmitter.getListenersByName(EventsEnum.POST_ADDED).length == 0) {
+      /* listen for adding a new post */
       postEmitter.on(EventsEnum.POST_ADDED, (post) => {
         setPosts((old) => (old === null ? [post] : [post, ...old]));
       });
-      console.log("here");
+    }
+
+    if (postEmitter.getListenersByName(EventsEnum.HIDE_POST).length == 0) {
+      /* listen for hiding a post */
+      postEmitter.on(EventsEnum.HIDE_POST, (post) => {
+        console.log("hide the post with title", post.title);
+      });
     }
   }, [postEmitter]);
 
@@ -50,6 +57,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
             _id={e._id}
             key={i}
             username={e.username}
+            postEmitter={postEmitter}
           ></PostComponent>
         );
       })}

@@ -20,4 +20,5 @@ export enum pageRoutes {
 
 export enum EventsEnum {
   POST_ADDED = "POST_ADDED",
+  HIDE_POST = "HIDE_POST",
 }
