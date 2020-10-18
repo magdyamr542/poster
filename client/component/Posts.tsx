@@ -21,6 +21,11 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     return _posts;
   };
 
+  const hidePost = (postId: string) => {
+    console.log(postId);
+    setPosts((oldPosts) => oldPosts!.filter((post) => post._id !== postId));
+  };
+
   // run this subscription only once at the first time
   useEffect(() => {
     // if there are handlers dut to component refreshing then do not subscribe
@@ -34,7 +39,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     if (postEmitter.getListenersByName(EventsEnum.HIDE_POST).length == 0) {
       /* listen for hiding a post */
       postEmitter.on(EventsEnum.HIDE_POST, (post) => {
-        console.log("hide the post with title", post.title);
+        hidePost(post._id);
       });
     }
   }, [postEmitter]);

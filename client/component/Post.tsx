@@ -37,7 +37,7 @@ export const Post: React.FC<PostProps> = ({
     console.log("remove the post");
   };
   return (
-    <Grid item style={{}}>
+    <Grid item style={{ margin: "10px 0" }}>
       <CardActionArea component="a" href="#!">
         <Card style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
