@@ -1,6 +1,7 @@
 import * as React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { EventEmitter } from "../EventEmitter";
+import { EventsEnum } from "../interfaces/enums";
 import { AxiosRequest, Post } from "../interfaces/types";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
@@ -8,8 +9,10 @@ import { InfoMsg } from "./InfoMsg";
 import { Post as PostComponent } from "./Post";
 import { ProgressWithMsg } from "./ProgressWithMsg";
 
-interface PostsProps {}
-export const Posts: React.FC<PostsProps> = ({}) => {
+interface PostsProps {
+  postEmitter: EventEmitter<Post>;
+}
+export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
   // defined here because useEffect does not expect any async ops inside of it
   const fetchPosts = async (): Promise<Post[]> => {
@@ -17,6 +20,18 @@ export const Posts: React.FC<PostsProps> = ({}) => {
     const _posts = await PostService.getAllPosts(request);
     return _posts;
   };
+
+  // run this subscription only once at the first time
+  useEffect(() => {
+    // if there are handlers dut to component refreshing then do not subscribe
+    if (postEmitter.getListenersByName(EventsEnum.POST_ADDED).length == 0) {
+      postEmitter.on(EventsEnum.POST_ADDED, (post) => {
+        setPosts((old) => (old === null ? [post] : [post, ...old]));
+      });
+      console.log("here");
+    }
+  }, [postEmitter]);
+
   useEffect(() => {
     const _posts = fetchPosts()
       .then((d) => setPosts(d.reverse()))

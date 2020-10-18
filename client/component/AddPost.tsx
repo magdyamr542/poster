@@ -1,13 +1,17 @@
 import { Button, TextField, Typography } from "@material-ui/core";
+import { EventEmitter } from "../EventEmitter";
 import * as React from "react";
 import { useState } from "react";
-import { AxiosRequest } from "../interfaces/types";
+import { AxiosRequest, Post } from "../interfaces/types";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
+import { EventsEnum } from "../interfaces/enums";
 
-interface AddPostProps {}
+interface AddPostProps {
+  postEmitter: EventEmitter<Post>; // used to communicate with the posts component
+}
 
-export const AddPost: React.FC<AddPostProps> = ({}) => {
+export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
   const leftAlignPadding = 25;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,9 +27,8 @@ export const AddPost: React.FC<AddPostProps> = ({}) => {
 
   const handleAddPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(title, content);
     const post = await addPost(title, content);
-    console.log("the added post is ", post);
+    postEmitter.emit(EventsEnum.POST_ADDED, post); // publish that a post was added
   };
 
   return (

@@ -17,3 +17,7 @@ export enum pageRoutes {
   SIGN_IN_PAGE = "/login",
   HOME_PAGE = "/home",
 }
+
+export enum EventsEnum {
+  POST_ADDED = "POST_ADDED",
+}
