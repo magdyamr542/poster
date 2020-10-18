@@ -11,9 +11,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface } from "../interfaces/types";
-import { EventsEnum } from "../interfaces/enums";
-import { parseJwtToken } from "../services/cookieService";
 import { AuthService } from "../services/AuthService";
+import { useState } from "react";
+import { EventsEnum } from "../interfaces/enums";
 
 interface PostProps {
   title: string;
@@ -37,7 +37,6 @@ export const Post: React.FC<PostProps> = ({
   // get the id of the current user
   const canDeletePost = (): boolean => {
     const currentUser = AuthService.getCurrentLoggedInUser();
-    console.log(currentUser, currentUser?.id === userId);
     return currentUser?.id === userId;
   };
   // hide a post
@@ -45,8 +44,8 @@ export const Post: React.FC<PostProps> = ({
     postEmitter.emit(EventsEnum.HIDE_POST, { title, content, _id, userId });
   };
   // delete a post
-  const handleRemovePost = () => {
-    console.log("remove the post", userId);
+  const handleDeletePost = () => {
+    postEmitter.emit(EventsEnum.DELETE_POST, { userId, title, content, _id });
   };
   return (
     <Grid item style={{ margin: "10px 0" }}>
@@ -71,7 +70,7 @@ export const Post: React.FC<PostProps> = ({
                   </IconButton>
 
                   <IconButton
-                    onClick={handleRemovePost}
+                    onClick={handleDeletePost}
                     style={{ padding: 0 }}
                     disabled={!canDeletePost()}
                   >

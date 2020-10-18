@@ -51,4 +51,16 @@ export class AxiosRequestService {
     };
     return request;
   };
+
+  static getDeletePostRequest = (postId: string): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "delete",
+      url: Server_Routes.DELETE_POST,
+      data: { postId },
+      headers: {
+        auth: getCookie("token"),
+      },
+    };
+    return request;
+  };
 }

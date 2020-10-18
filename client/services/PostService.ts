@@ -31,18 +31,18 @@ export class PostService {
     }
   };
 
-  // static addPost = async (request: AxiosRequest): Promise<Post> => {
-  //   try {
-  //     const response = await axios({
-  //       url: request.url,
-  //       method: request.method,
-  //       headers: request.headers,
-  //       data: request.data,
-  //     });
-  //     return response.data.post as Post;
-  //   } catch (e) {
-  //     console.log("Error", e);
-  //     return { title: "", content: "", _id: "" };
-  //   }
-  // };
+  static deletePost = async (request: AxiosRequest): Promise<Post> => {
+    try {
+      const response = await axios({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        data: request.data,
+      });
+      return response.data.post as Post;
+    } catch (e) {
+      console.log("Error", e);
+      return { title: "", content: "", _id: "", userId: "" };
+    }
+  };
 }

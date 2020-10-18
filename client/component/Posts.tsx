@@ -21,9 +21,17 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     return _posts;
   };
 
+  /* hide a post */
   const hidePost = (postId: string) => {
-    console.log(postId);
     setPosts((oldPosts) => oldPosts!.filter((post) => post._id !== postId));
+  };
+
+  /* delete the post entirely from the db */
+  const deletePost = async (postId: string) => {
+    const deleteRequest = AxiosRequestService.getDeletePostRequest(postId);
+    const deletedPost = await PostService.deletePost(deleteRequest);
+    console.log("the deleted post is", deletedPost);
+    hidePost(deletedPost._id);
   };
 
   // run this subscription only once at the first time
@@ -40,6 +48,13 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
       /* listen for hiding a post */
       postEmitter.on(EventsEnum.HIDE_POST, (post) => {
         hidePost(post._id);
+      });
+    }
+
+    if (postEmitter.getListenersByName(EventsEnum.DELETE_POST).length == 0) {
+      /* listen for removing a post */
+      postEmitter.on(EventsEnum.DELETE_POST, (post) => {
+        deletePost(post._id);
       });
     }
   }, [postEmitter]);

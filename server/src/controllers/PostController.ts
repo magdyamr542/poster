@@ -71,7 +71,7 @@ export class PostController {
         } else
           res
             .status(HTTPSTATUS.SUCCESS)
-            .send({ msg: HTTPMSG.POST_DELETED, deletedPost: post });
+            .send({ msg: HTTPMSG.POST_DELETED, post });
       })
       .catch((e) => {
         res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR });

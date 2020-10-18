@@ -5,6 +5,7 @@ export enum Server_Routes {
   GET_ALL_USERS = "http://localhost:4000/user/getUsers",
   GET_ALL_POSTS = "http://localhost:4000/post/getPosts",
   ADD_POST = "http://localhost:4000/post/addPost",
+  DELETE_POST = "http://localhost:4000/post/deletePost",
 }
 
 export enum MsgInfoColors {
@@ -21,4 +22,5 @@ export enum pageRoutes {
 export enum EventsEnum {
   POST_ADDED = "POST_ADDED",
   HIDE_POST = "HIDE_POST",
+  DELETE_POST = "DELETE_POST",
 }
