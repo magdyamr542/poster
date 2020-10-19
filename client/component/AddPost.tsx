@@ -29,6 +29,8 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
     e.preventDefault();
     const post = await addPost(title, content);
     postEmitter.emit(EventsEnum.POST_ADDED, post); // publish that a post was added
+    setTitle("");
+    setContent("");
   };
 
   return (
@@ -59,6 +61,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
           label="Title"
           style={{ margin: leftAlignPadding, width: "40%" }}
           onChange={(e) => setTitle(e.target.value)}
+          value={title}
         />
         <TextField
           placeholder="Content ..."
@@ -68,6 +71,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
           className={"add_post_content"}
           style={{ margin: leftAlignPadding, width: "80%" }}
           onChange={(e) => setContent(e.target.value)}
+          value={content}
         />
         <Button
           type="submit"
