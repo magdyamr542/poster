@@ -1,6 +1,8 @@
 import {
+  Button,
   Card,
   CardActionArea,
+  CardActions,
   CardContent,
   Grid,
   IconButton,
@@ -12,15 +14,15 @@ import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
-import { useState } from "react";
 import { EventsEnum } from "../interfaces/enums";
+import { useRouter } from "next/router";
 
 interface PostProps {
   title: string;
   content: string;
   username?: string; // display in the post ui
   _id: string; // for removing the post
-  postEmitter: EventEmitter<PostInterface>; // send notification that a post should be deleted
+  postEmitter?: EventEmitter<PostInterface>; // send notification that a post should be deleted
   createdAt?: Date;
   userId: string; // used to control which posts this user can delete
 }
@@ -34,6 +36,9 @@ export const Post: React.FC<PostProps> = ({
   createdAt,
   userId,
 }) => {
+  const postHref: string = `/post/${_id}`;
+  const router = useRouter();
+  const inPostPage = postEmitter ? false : true;
   // get the id of the current user
   const canDeletePost = (): boolean => {
     const currentUser = AuthService.getCurrentLoggedInUser();
@@ -41,26 +46,42 @@ export const Post: React.FC<PostProps> = ({
   };
   // hide a post
   const handleHidePost = () => {
-    postEmitter.emit(EventsEnum.HIDE_POST, { title, content, _id, userId });
+    postEmitter!.emit(EventsEnum.HIDE_POST, { title, content, _id, userId });
   };
   // delete a post
   const handleDeletePost = () => {
-    postEmitter.emit(EventsEnum.DELETE_POST, { userId, title, content, _id });
+    postEmitter!.emit(EventsEnum.DELETE_POST, { userId, title, content, _id });
   };
+
+  // parse the date
+  const parseDate = () => {
+    return new Date(createdAt!.toString()).toLocaleString();
+  };
+
   return (
     <Grid item style={{ margin: "10px 0" }}>
-      <CardActionArea component="a" href="#!">
+      <div>
         <Card style={{ display: "flex" }}>
           <div style={{ flex: 1 }}>
             <CardContent>
               {/* post header */}
-              <div className="post_header">
+              <div
+                className="post_header"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginLeft: 16,
+                }}
+              >
                 <Typography component="h2" variant="h5" display={"inline"}>
                   {title}
                 </Typography>
                 <div
                   className="icons"
-                  style={{ marginLeft: "90%", display: "inline" }}
+                  style={{
+                    display: inPostPage ? "none" : "flex",
+                    marginRight: 25,
+                  }}
                 >
                   <IconButton onClick={handleHidePost} style={{ padding: 0 }}>
                     <RemoveRedEyeOutlinedIcon
@@ -79,17 +100,32 @@ export const Post: React.FC<PostProps> = ({
                 </div>
               </div>
               {/* additional info */}
-              <Typography variant="subtitle1" color="textSecondary">
-                <span style={{ marginRight: 12, fontWeight: "bold" }}>
-                  {username}.
-                </span>{" "}
-                <span>{createdAt?.toLocaleString()}</span>
-              </Typography>
-              <p>{content}</p>
+              <CardContent
+                className="post_info"
+                style={{ padding: "5px 16px" }}
+              >
+                <Typography variant="subtitle1" color="textSecondary">
+                  <span style={{ marginRight: 12, fontWeight: "bold" }}>
+                    {username}.
+                  </span>{" "}
+                  <span>{parseDate()}</span>
+                </Typography>
+                <p style={{ wordBreak: "break-word" }}>{content}</p>
+              </CardContent>
+              <CardActions style={{ display: inPostPage ? "none" : "block" }}>
+                <Button
+                  size="small"
+                  color="primary"
+                  style={{ fontFamily: "sans-serif" }}
+                  onClick={(e) => router.push(postHref)}
+                >
+                  Learn More
+                </Button>
+              </CardActions>
             </CardContent>
           </div>
         </Card>
-      </CardActionArea>
+      </div>
     </Grid>
   );
 };

@@ -8,6 +8,7 @@ export interface AxiosRequest {
   url: string;
   data?: object;
   headers?: object;
+  params?: object;
 }
 
 export interface AuthResponse {

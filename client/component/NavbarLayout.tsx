@@ -4,6 +4,7 @@ import {
   IconButton,
   Typography,
   Button,
+  Link,
 } from "@material-ui/core";
 import { useRouter } from "next/router";
 import * as React from "react";
@@ -22,7 +23,20 @@ export const NavbarLayout: React.FC<NavbarLayoutProps> = ({ username }) => {
   return (
     <AppBar position="static">
       <Toolbar style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h5">Poster App</Typography>
+        <div className="links">
+          <Typography
+            variant="h5"
+            style={{ display: "inline-block", marginRight: 25 }}
+          >
+            Poster App
+          </Typography>
+          <Button
+            color="inherit"
+            onClick={(e) => router.push(pageRoutes.HOME_PAGE)}
+          >
+            Home
+          </Button>
+        </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
           <Typography variant="h6">{username}</Typography>
           <Button color="inherit" onClick={handleLogout}>

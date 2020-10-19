@@ -1,7 +1,8 @@
+import { useRouter } from "next/router";
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { EventEmitter } from "../EventEmitter";
-import { EventsEnum } from "../interfaces/enums";
+import { EventsEnum, pageRoutes } from "../interfaces/enums";
 import { AxiosRequest, Post } from "../interfaces/types";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
@@ -14,6 +15,7 @@ interface PostsProps {
 }
 export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const router = useRouter();
   // defined here because useEffect does not expect any async ops inside of it
   const fetchPosts = async (): Promise<Post[]> => {
     const request: AxiosRequest = AxiosRequestService.getAllPostsRequest();
@@ -30,7 +32,11 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   const deletePost = async (postId: string) => {
     const deleteRequest = AxiosRequestService.getDeletePostRequest(postId);
     const deletedPost = await PostService.deletePost(deleteRequest);
-    console.log("the deleted post is", deletedPost);
+    if (deletedPost._id.length == 0) {
+      // we got an error so we need to login
+      router.push(pageRoutes.SIGN_IN_PAGE);
+      return;
+    }
     hidePost(deletedPost._id);
   };
 
@@ -70,16 +76,23 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   return (
     <>
       {posts.map((e, i) => {
+        // do not show the full text
+        let content = e.content;
+        let maxLength = 25;
+        if (content.length > maxLength) {
+          content = content.substring(0, maxLength);
+          content += ". click for more...";
+        }
         return (
           <PostComponent
             title={e.title}
-            content={e.content}
+            content={content}
             _id={e._id}
             key={i}
             username={e.username}
             postEmitter={postEmitter}
             userId={e.userId}
-            createdAt={new Date(e.createdAt!.toString())}
+            createdAt={e.createdAt!}
           ></PostComponent>
         );
       })}

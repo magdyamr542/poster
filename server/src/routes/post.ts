@@ -11,6 +11,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/getPosts", [checkJwt], PostController.getPosts); // adding this middleware so only admins can access the users
+router.post("/getPostById", [checkJwt], PostController.getPostById);
 router.post("/addPost", [checkJwt], PostController.addPost);
 router.get("/getUsersPosts", [checkJwt], PostController.getPostsOfUser);
 router.delete(

@@ -63,4 +63,16 @@ export class AxiosRequestService {
     };
     return request;
   };
+
+  static getGetPostByIdRequest = (postId: string): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.GET_POST_BY_ID,
+      headers: {
+        auth: getCookie("token"),
+      },
+      data: { postId },
+    };
+    return request;
+  };
 }

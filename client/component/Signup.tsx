@@ -2,13 +2,9 @@ import { Button, CircularProgress, Typography } from "@material-ui/core";
 import * as React from "react";
 import { useState } from "react";
 import TextInput from "./TextInput";
-import { MsgInfoColors, pageRoutes, Server_Routes } from "../interfaces/enums";
+import { MsgInfoColors, pageRoutes } from "../interfaces/enums";
 import { InfoMsg } from "./InfoMsg";
-import {
-  AuthResponse,
-  AxiosRequest,
-  InfoMsgInterface,
-} from "../interfaces/types";
+import { AuthResponse, InfoMsgInterface } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
 import { useRouter } from "next/router";
 import { setCookieToClient } from "../services/cookieService";

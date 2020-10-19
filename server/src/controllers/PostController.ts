@@ -17,6 +17,17 @@ export class PostController {
       });
   };
 
+  /* getting a post by its id */
+  static getPostById = async (req: Request, res: Response) => {
+    const postId = req.body.postId;
+    Post.findById(postId)
+      .then((post) => res.status(HTTPSTATUS.SUCCESS).send({ post }))
+      .catch((e) =>
+        res
+          .status(HTTPSTATUS.NOT_FOUND)
+          .send({ msg: "There is no post with suc id" })
+      );
+  };
   /* Deleting all the posts of the db */
   static deletePosts = async (req: Request, res: Response) => {
     await Post.deleteMany({});
