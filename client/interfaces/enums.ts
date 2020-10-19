@@ -25,3 +25,9 @@ export enum EventsEnum {
   HIDE_POST = "HIDE_POST",
   DELETE_POST = "DELETE_POST",
 }
+
+export enum VotingColors {
+  GREEN = "#7adb7a",
+  RED = "RED",
+  BLACK = "black",
+}

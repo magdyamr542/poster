@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import * as React from "react";
 import { useState, useEffect, useCallback } from "react";
+import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
 import { EventEmitter } from "../EventEmitter";
 import { EventsEnum, pageRoutes } from "../interfaces/enums";
 import { AxiosRequest, Post } from "../interfaces/types";
@@ -78,10 +79,13 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
       {posts.map((e, i) => {
         // do not show the full text
         let content = e.content;
-        let maxLength = 25;
-        if (content.length > maxLength) {
-          content = content.substring(0, maxLength);
-          content += ". click for more...";
+
+        if (content.length > MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE) {
+          content = content.substring(
+            0,
+            MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE
+          );
+          content += " ....";
         }
         return (
           <PostComponent

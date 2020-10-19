@@ -1,7 +1,6 @@
 import {
   Button,
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   Grid,
@@ -16,6 +15,7 @@ import { Post as PostInterface } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
 import { EventsEnum } from "../interfaces/enums";
 import { useRouter } from "next/router";
+import { Voting } from "./Voting";
 
 interface PostProps {
   title: string;
@@ -73,26 +73,46 @@ export const Post: React.FC<PostProps> = ({
                   marginLeft: 16,
                 }}
               >
-                <Typography component="h2" variant="h5" display={"inline"}>
-                  {title}
-                </Typography>
+                <div
+                  className="post_header_first_section"
+                  style={{ display: "flex" }}
+                >
+                  {/* voting */}
+                  <Voting value={1} />
+                  <Typography
+                    component="h2"
+                    variant="h5"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {title}
+                  </Typography>
+                </div>
                 <div
                   className="icons"
                   style={{
                     display: inPostPage ? "none" : "flex",
                     marginRight: 25,
+                    gridGap: 5,
                   }}
                 >
-                  <IconButton onClick={handleHidePost} style={{ padding: 0 }}>
+                  {/* hide icon */}
+                  <IconButton
+                    onClick={handleHidePost}
+                    style={{ padding: 2, maxHeight: 50 }}
+                  >
                     <RemoveRedEyeOutlinedIcon
                       style={{ marginRight: 10 }}
                       titleAccess={"hide"}
                     />{" "}
                   </IconButton>
-
+                  {/* delete icon */}
                   <IconButton
                     onClick={handleDeletePost}
-                    style={{ padding: 0 }}
+                    style={{ padding: 0, maxHeight: 50 }}
                     disabled={!canDeletePost()}
                   >
                     <DeleteIcon titleAccess={"delete"} />
