@@ -14,6 +14,8 @@ router.get("/getPosts", [checkJwt], PostController.getPosts); // adding this mid
 router.post("/getPostById", [checkJwt], PostController.getPostById);
 router.post("/addPost", [checkJwt], PostController.addPost);
 router.get("/getUsersPosts", [checkJwt], PostController.getPostsOfUser);
+router.post("/getLimitedPosts", [checkJwt], PostController.getLimitedPosts);
+
 router.delete(
   "/deletePosts",
   [checkJwt, checkRole],

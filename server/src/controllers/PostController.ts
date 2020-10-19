@@ -28,6 +28,33 @@ export class PostController {
           .send({ msg: "There is no post with suc id" })
       );
   };
+
+  /* getting a limited number of posts from the db */
+  static getLimitedPosts = async (req: Request, res: Response) => {
+    const { skip, postCount } = req.body;
+
+    Post.aggregate([
+      {
+        $sort: { createdAt: -1 },
+      },
+      {
+        $skip: skip,
+      },
+      {
+        $limit: postCount,
+      },
+    ])
+      .then((posts) => {
+        res
+          .status(HTTPSTATUS.SUCCESS)
+          .send({ posts, currentlyAt: skip + postCount });
+      })
+      .catch((e) => {
+        res
+          .status(HTTPSTATUS.BAD_REQUEST)
+          .send({ err: e, msg: HTTPMSG.DB_ERROR });
+      });
+  };
   /* Deleting all the posts of the db */
   static deletePosts = async (req: Request, res: Response) => {
     await Post.deleteMany({});

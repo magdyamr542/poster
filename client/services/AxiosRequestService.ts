@@ -1,3 +1,4 @@
+import { POST_COUNT_TO_GET_WHEN_USER_CLICKS_SHOW_MORE } from "../consts";
 import { Server_Routes } from "../interfaces/enums";
 import { AxiosRequest } from "../interfaces/types";
 import { getCookie } from "./cookieService";
@@ -36,6 +37,18 @@ export class AxiosRequestService {
       headers: {
         auth: getCookie("token"),
       },
+    };
+    return request;
+  };
+
+  static getLimitedPostsRequest = (skip: number): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.GET_LIMITED_POSTS,
+      headers: {
+        auth: getCookie("token"),
+      },
+      data: { skip, postCount: POST_COUNT_TO_GET_WHEN_USER_CLICKS_SHOW_MORE }, // currently getting only sechs posts per click
     };
     return request;
   };

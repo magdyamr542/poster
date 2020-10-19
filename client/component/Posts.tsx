@@ -1,6 +1,7 @@
+import { Button } from "@material-ui/core";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
 import { EventEmitter } from "../EventEmitter";
 import { EventsEnum, pageRoutes } from "../interfaces/enums";
@@ -16,13 +17,11 @@ interface PostsProps {
 }
 export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [currentlyAt, setCurrentlyAt] = useState(0); // at the beginning we skip 0 posts
+  const [displayLoadMorePostsBtn, setDisplayLoadMorePostsBtn] = useState<
+    boolean
+  >(true);
   const router = useRouter();
-  // defined here because useEffect does not expect any async ops inside of it
-  const fetchPosts = async (): Promise<Post[]> => {
-    const request: AxiosRequest = AxiosRequestService.getAllPostsRequest();
-    const _posts = await PostService.getAllPosts(request);
-    return _posts;
-  };
 
   /* hide a post */
   const hidePost = (postId: string) => {
@@ -39,6 +38,11 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
       return;
     }
     hidePost(deletedPost._id);
+  };
+
+  const getLimitedPosts = (skip: number) => {
+    const request = AxiosRequestService.getLimitedPostsRequest(skip);
+    return PostService.getLimitedPosts(request);
   };
 
   // run this subscription only once at the first time
@@ -66,9 +70,24 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     }
   }, [postEmitter]);
 
+  /* loading more posts when the user clicks the load more button */
+  const handleLoadMorePosts = () => {
+    getLimitedPosts(currentlyAt)
+      .then((d) => {
+        setPosts((old) => [...old!, ...d.posts]);
+        setCurrentlyAt(d.currentlyAt);
+        setDisplayLoadMorePostsBtn(d.posts.length !== 0);
+      })
+      .catch((e) => console.log("error from getting more posts", e));
+  };
+
   useEffect(() => {
-    const _posts = fetchPosts()
-      .then((d) => setPosts(d.reverse()))
+    const _posts = getLimitedPosts(0)
+      .then((d) => {
+        // set the posts and mark where we are currently at
+        setPosts(d.posts);
+        setCurrentlyAt(d.currentlyAt);
+      })
       .catch((e) => console.log("error from posts fetching ", e));
   }, []); // the empty array tells react to only make the api call once on mount and that is it
   if (!posts) return <ProgressWithMsg msg={"loading posts..."} />;
@@ -100,6 +119,23 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
           ></PostComponent>
         );
       })}
+      <Button
+        variant={"contained"}
+        color="primary"
+        style={{
+          margin: "20px auto",
+          padding: "8px 16px",
+          display: displayLoadMorePostsBtn ? "block" : "none",
+        }}
+        onClick={handleLoadMorePosts}
+      >
+        load more posts...
+      </Button>
+      <InfoMsg
+        msg={"no more posts ..."}
+        color="black"
+        display={displayLoadMorePostsBtn ? "none" : "block"}
+      />
     </>
   );
 };

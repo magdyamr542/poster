@@ -31,6 +31,26 @@ export class PostService {
     }
   };
 
+  static getLimitedPosts = async (
+    request: AxiosRequest
+  ): Promise<{ posts: Post[]; currentlyAt: number }> => {
+    try {
+      const response = await axios({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        data: request.data,
+      });
+      return {
+        posts: response.data.posts as Post[],
+        currentlyAt: response.data.currentlyAt,
+      };
+    } catch (e) {
+      console.log("Error", e);
+      return { posts: [], currentlyAt: -1 };
+    }
+  };
+
   static deletePost = async (request: AxiosRequest): Promise<Post> => {
     try {
       const response = await axios({

@@ -7,6 +7,7 @@ export enum Server_Routes {
   ADD_POST = "http://localhost:4000/post/addPost",
   DELETE_POST = "http://localhost:4000/post/deletePost",
   GET_POST_BY_ID = "http://localhost:4000/post/getPostById",
+  GET_LIMITED_POSTS = "http://localhost:4000/post/getLimitedPosts",
 }
 
 export enum MsgInfoColors {

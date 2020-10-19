@@ -32,7 +32,6 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
     setTitle("");
     setContent("");
   };
-
   return (
     <>
       <form

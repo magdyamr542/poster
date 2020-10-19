@@ -124,9 +124,15 @@ export const Post: React.FC<PostProps> = ({
                 className="post_info"
                 style={{ padding: "5px 16px" }}
               >
-                <Typography variant="subtitle1" color="textSecondary">
-                  <span style={{ marginRight: 12, fontWeight: "bold" }}>
-                    {username}.
+                <Typography variant="subtitle1" color={"textSecondary"}>
+                  <span
+                    style={{
+                      marginRight: 12,
+                      fontWeight: "bold",
+                      color: canDeletePost() ? "#3f51b5" : "inherit",
+                    }}
+                  >
+                    {username}
                   </span>{" "}
                   <span>{parseDate()}</span>
                 </Typography>
@@ -135,9 +141,10 @@ export const Post: React.FC<PostProps> = ({
               <CardActions style={{ display: inPostPage ? "none" : "block" }}>
                 <Button
                   size="small"
-                  color="primary"
+                  color="default"
                   style={{ fontFamily: "sans-serif" }}
                   onClick={(e) => router.push(postHref)}
+                  variant="outlined"
                 >
                   Learn More
                 </Button>
