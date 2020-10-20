@@ -40,6 +40,7 @@ export const Post: React.FC<PostProps> = ({
   const postHref: string = `/post/${_id}`;
   const router = useRouter();
   const inPostPage = postEmitter ? false : true;
+  const [showPostTemplate, setShowPostTemplate] = React.useState<boolean>(true);
   // get the id of the current user
   const canDeletePost = (): boolean => {
     const currentUser = AuthService.getCurrentLoggedInUser();
@@ -47,7 +48,7 @@ export const Post: React.FC<PostProps> = ({
   };
   // hide a post
   const handleHidePost = () => {
-    postEmitter!.emit(EventsEnum.HIDE_POST, { title, content, _id, userId });
+    setShowPostTemplate(false);
   };
   // delete a post
   const handleDeletePost = () => {
@@ -59,104 +60,120 @@ export const Post: React.FC<PostProps> = ({
     return new Date(createdAt!.toString()).toLocaleString();
   };
 
+  const handleShowHiddenPost = () => {
+    // the post was hidden and we want to display it
+    setShowPostTemplate(true);
+  };
+
   return (
     <>
-      <Grid item style={{ margin: "10px 0" }}>
-        <div>
-          <Card style={{ display: "flex" }}>
-            <div style={{ flex: 1 }}>
-              <CardContent>
-                {/* post header */}
-                <div
-                  className="post_header"
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginLeft: 16,
-                  }}
-                >
+      <div
+        className="post_template_container"
+        style={{ display: showPostTemplate ? "block" : "none" }}
+      >
+        <Grid item style={{ margin: "10px 0" }}>
+          <div>
+            <Card style={{ display: "flex" }}>
+              <div style={{ flex: 1 }}>
+                <CardContent>
+                  {/* post header */}
                   <div
-                    className="post_header_first_section"
-                    style={{ display: "flex" }}
-                  >
-                    {/* voting */}
-                    <Voting value={1} />
-                    <Typography
-                      component="h2"
-                      variant="h5"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      {title}
-                    </Typography>
-                  </div>
-                  <div
-                    className="icons"
+                    className="post_header"
                     style={{
-                      display: inPostPage ? "none" : "flex",
-                      marginRight: 25,
-                      gridGap: 5,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginLeft: 16,
                     }}
                   >
-                    {/* hide icon */}
-                    <IconButton
-                      onClick={handleHidePost}
-                      style={{ padding: 2, maxHeight: 50 }}
+                    <div
+                      className="post_header_first_section"
+                      style={{ display: "flex" }}
                     >
-                      <RemoveRedEyeOutlinedIcon
-                        style={{ marginRight: 10 }}
-                        titleAccess={"hide"}
-                      />{" "}
-                    </IconButton>
-                    {/* delete icon */}
-                    <IconButton
-                      onClick={handleDeletePost}
-                      style={{ padding: 0, maxHeight: 50 }}
-                      disabled={!canDeletePost()}
-                    >
-                      <DeleteIcon titleAccess={"delete"} />
-                    </IconButton>
-                  </div>
-                </div>
-                {/* additional info */}
-                <CardContent
-                  className="post_info"
-                  style={{ padding: "5px 16px" }}
-                >
-                  <Typography variant="subtitle1" color={"textSecondary"}>
-                    <span
+                      {/* voting */}
+                      <Voting value={1} />
+                      <Typography
+                        component="h2"
+                        variant="h5"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        {title}
+                      </Typography>
+                    </div>
+                    <div
+                      className="icons"
                       style={{
-                        marginRight: 12,
-                        fontWeight: "bold",
-                        color: canDeletePost() ? "#3f51b5" : "inherit",
+                        display: inPostPage ? "none" : "flex",
+                        marginRight: 25,
+                        gridGap: 5,
                       }}
                     >
-                      {username}
-                    </span>{" "}
-                    <span>{parseDate()}</span>
-                  </Typography>
-                  <p style={{ wordBreak: "break-word" }}>{content}</p>
-                </CardContent>
-                <CardActions style={{ display: inPostPage ? "none" : "block" }}>
-                  <Button
-                    size="small"
-                    color="default"
-                    style={{ fontFamily: "sans-serif" }}
-                    onClick={(e) => router.push(postHref)}
-                    variant="outlined"
+                      {/* hide icon */}
+                      <IconButton
+                        onClick={handleHidePost}
+                        style={{ padding: 2, maxHeight: 50 }}
+                      >
+                        <RemoveRedEyeOutlinedIcon
+                          style={{ marginRight: 10 }}
+                          titleAccess={"hide"}
+                        />{" "}
+                      </IconButton>
+                      {/* delete icon */}
+                      <IconButton
+                        onClick={handleDeletePost}
+                        style={{ padding: 0, maxHeight: 50 }}
+                        disabled={!canDeletePost()}
+                      >
+                        <DeleteIcon titleAccess={"delete"} />
+                      </IconButton>
+                    </div>
+                  </div>
+                  {/* additional info */}
+                  <CardContent
+                    className="post_info"
+                    style={{ padding: "5px 16px" }}
                   >
-                    Learn More
-                  </Button>
-                </CardActions>
-              </CardContent>
-            </div>
-          </Card>
-        </div>
-      </Grid>
-      <ShowAndHideToggle />
+                    <Typography variant="subtitle1" color={"textSecondary"}>
+                      <span
+                        style={{
+                          marginRight: 12,
+                          fontWeight: "bold",
+                          color: canDeletePost() ? "#3f51b5" : "inherit",
+                        }}
+                      >
+                        {username}
+                      </span>{" "}
+                      <span>{parseDate()}</span>
+                    </Typography>
+                    <p style={{ wordBreak: "break-word" }}>{content}</p>
+                  </CardContent>
+                  <CardActions
+                    style={{ display: inPostPage ? "none" : "block" }}
+                  >
+                    <Button
+                      size="small"
+                      color="default"
+                      style={{ fontFamily: "sans-serif" }}
+                      onClick={(e) => router.push(postHref)}
+                      variant="outlined"
+                    >
+                      Learn More
+                    </Button>
+                  </CardActions>
+                </CardContent>
+              </div>
+            </Card>
+          </div>
+        </Grid>
+      </div>
+      <ShowAndHideToggle
+        onClick={handleShowHiddenPost}
+        show={showPostTemplate ? false : true}
+        title={title}
+      />
     </>
   );
 };
