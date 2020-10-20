@@ -1,4 +1,4 @@
-import { useRouter } from "next/router";
+import { NextPage } from "next";
 import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -9,9 +9,12 @@ import { Post as PostInterface } from "../../interfaces/types";
 import { AxiosRequestService } from "../../services/AxiosRequestService";
 import { PostService } from "../../services/PostService";
 
-const PostPage = ({}) => {
-  const router = useRouter();
-  const postId = router.query.postId as string;
+interface PostPageProps {
+  id: string;
+}
+const PostPage: NextPage<PostPageProps> = ({ id }) => {
+  console.log(id);
+  const postId = id;
   const [post, setPost] = useState<PostInterface | null>(null);
 
   const getPost = async (postId: string) => {
@@ -40,6 +43,11 @@ const PostPage = ({}) => {
       </Layout>
     </>
   );
+};
+
+PostPage.getInitialProps = async ({ query }) => {
+  const postId = query.postId as string;
+  return { id: postId };
 };
 
 export default PostPage;
