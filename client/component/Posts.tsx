@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
 import { EventEmitter } from "../EventEmitter";
 import { EventsEnum, pageRoutes } from "../interfaces/enums";
-import { AxiosRequest, Post } from "../interfaces/types";
+import { Post } from "../interfaces/types";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
 import { InfoMsg } from "./InfoMsg";
