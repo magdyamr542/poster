@@ -10,6 +10,7 @@ interface Props {
   label: string;
   selector: string;
   onValueChange: (currValue: string) => void;
+  value?: string;
 }
 
 const TextInput: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const TextInput: React.FC<Props> = ({
   id = "default_id",
   selector,
   onValueChange,
+  value = "",
 }) => {
   return (
     <TextField
@@ -33,6 +35,7 @@ const TextInput: React.FC<Props> = ({
       id={id}
       className={selector}
       onChange={(e) => onValueChange(e.target.value)}
+      value={value}
     />
   );
 };

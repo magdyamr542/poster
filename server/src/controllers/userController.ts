@@ -12,7 +12,7 @@ import {
   generateToken,
   hashPassword,
 } from "../utils/authUtils";
-import jwt = require("jsonwebtoken");
+import { sendEmail } from "../utils/sendEmail";
 export class UserController {
   /* Add A User to the DB */
   static register = async (req: Request, res: Response) => {
@@ -55,7 +55,6 @@ export class UserController {
   /* Log the user in and send him a jwt token */
   static login = async (req: Request, res: Response) => {
     const { name, email, password }: UserInterface = req.body;
-
     // check if we have a common user in the db
     const similarUserExists = await UserController.checkIfUserExists(
       name,
@@ -111,6 +110,30 @@ export class UserController {
       return;
     }
     // here we found the user
+    res
+      .status(HTTPSTATUS.SUCCESS)
+      .send({ user: UserController.getUserPublicFields(user) });
+  };
+
+  /* Getting a user by its id */
+  static changePasswordAuth = async (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    let user = await User.findOne({ name, email });
+    if (!user) {
+      console.log("coming here");
+
+      res.status(HTTPSTATUS.NOT_FOUND).send({ err: HTTPMSG.USER_NOT_FOUND });
+      return;
+    }
+
+    // here we found the user and we send him the email
+    const token = await generateToken({ username: user.name, id: user._id });
+    const href = `http://localhost:4001/password/forgot-password/${token}`;
+    const link = `<a href="${href}">reset-password</a>`;
+    await sendEmail(email as string, link);
+
+    // send the user back to the front
+    res.setHeader("token", token); // the token should also be in the href of the link to be able to identify the user in the front end
     res
       .status(HTTPSTATUS.SUCCESS)
       .send({ user: UserController.getUserPublicFields(user) });

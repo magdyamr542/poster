@@ -38,7 +38,7 @@
   ],
   "include": [
     "./**/*.tsx",
-    "./**/*.ts"
+    "./**/*.ts", "../server/src/controllers/EmailService.ts"
   ],
   "typingOptions": {
     "enableAutoDiscovery": true

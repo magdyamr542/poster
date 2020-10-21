@@ -13,7 +13,6 @@ interface PostPageProps {
   id: string;
 }
 const PostPage: NextPage<PostPageProps> = ({ id }) => {
-  console.log(id);
   const postId = id;
   const [post, setPost] = useState<PostInterface | null>(null);
 

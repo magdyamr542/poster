@@ -90,6 +90,7 @@ export const Login: React.FC<{}> = () => {
             required={true}
             selector="name_input"
             onValueChange={(val) => setName(val)}
+            value={name}
           />
           <TextInput
             label="Email"
@@ -97,6 +98,7 @@ export const Login: React.FC<{}> = () => {
             required={true}
             selector="email_input"
             onValueChange={(val) => setEmail(val)}
+            value={email}
           />
           <TextInput
             label="Password"
@@ -104,6 +106,7 @@ export const Login: React.FC<{}> = () => {
             required={true}
             selector="password_input"
             onValueChange={(val) => setPassword(val)}
+            value={password}
           />
           <Button type="submit" fullWidth variant="contained" color="primary">
             Login
@@ -118,7 +121,7 @@ export const Login: React.FC<{}> = () => {
             }}
           >
             <Grid item xs>
-              <NextLink href="/login">
+              <NextLink href="/password/change-password">
                 <Link href="#" variant="body2" style={{ float: "left" }}>
                   Forgot password?
                 </Link>

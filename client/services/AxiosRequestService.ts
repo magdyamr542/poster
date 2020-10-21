@@ -88,4 +88,19 @@ export class AxiosRequestService {
     };
     return request;
   };
+
+  static getUserByNameAndEmailRequest = (
+    name: string,
+    email: string
+  ): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.CHANGE_PASSWORD_AUTH,
+      headers: {
+        auth: getCookie("token"),
+      },
+      data: { name, email },
+    };
+    return request;
+  };
 }

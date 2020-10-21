@@ -74,6 +74,7 @@ export const Signup: React.FC<{}> = () => {
           required={true}
           selector="name_input"
           onValueChange={(val) => setName(val)}
+          value={name}
         />
         <TextInput
           label="Email"
@@ -81,6 +82,7 @@ export const Signup: React.FC<{}> = () => {
           required={true}
           selector="email_input"
           onValueChange={(val) => setEmail(val)}
+          value={email}
         />
         <TextInput
           label="Password"
@@ -88,6 +90,7 @@ export const Signup: React.FC<{}> = () => {
           required={true}
           selector="password_input"
           onValueChange={(val) => setPassword(val)}
+          value={password}
         />
         <Button type="submit" fullWidth variant="contained" color="primary">
           Sign Up

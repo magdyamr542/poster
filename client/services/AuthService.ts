@@ -1,5 +1,4 @@
 import { AuthResponse, AxiosRequest, CurrentUser } from "../interfaces/types";
-import * as jsCookie from "js-cookie";
 import axios from "axios";
 import { parseJwtToken, getCookie, removeCookie } from "./cookieService";
 
@@ -41,6 +40,25 @@ export class AuthService {
         if (e.response) {
           reject({ data: {}, msg: e.response.data.err, err: e });
         }
+      }
+    });
+  };
+
+  static changePasswordAuth = (req: AxiosRequest): Promise<AuthResponse> => {
+    return new Promise<AuthResponse>(async (resolve, reject) => {
+      try {
+        const res = await axios({
+          method: req.method,
+          data: req.data,
+          url: req.url,
+        });
+        resolve({
+          msg: "user exists",
+          data: res.data,
+          token: res.headers["token"],
+        });
+      } catch (e) {
+        reject({ data: {}, msg: "User does not exist", err: e });
       }
     });
   };
