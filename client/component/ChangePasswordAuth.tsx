@@ -1,51 +1,52 @@
 import { Button, Typography } from "@material-ui/core";
-import { useRouter } from "next/router";
 import * as React from "react";
 import { useState } from "react";
 import { TIME_TO_SHOW_INFO_MSG } from "../consts";
-import { MsgInfoColors, pageRoutes } from "../interfaces/enums";
+import { MsgInfoColors } from "../interfaces/enums";
 import { AuthService } from "../services/AuthService";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { InfoMsg } from "./InfoMsg";
 import TextInput from "./TextInput";
 
-interface ChangePasswordProps {
-  token: string; // use it to make the request of changing the password
-}
-const ChangePassword: React.FC<ChangePasswordProps> = ({ token }) => {
-  const [password, setPassword] = useState<string>("");
+const ChangePasswordAuth: React.FC = ({}) => {
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [infoMsg, setInfoMsg] = useState<string>("");
   const [infoMsgColor, setInfoMsgColor] = useState<MsgInfoColors>(
     MsgInfoColors.SUCCESS
   );
-  const router = useRouter();
 
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    changePassword(password)
-      .then((changed) => {
+    // make a request to the db and check if the supplied email and username exist.
+    // if they exist then display the msg that the user should check their email
+    let userExists = checkIfUserExists(name, email)
+      .then((sent) => {
         setInfoMsgColor(MsgInfoColors.SUCCESS);
-        showInfoMsg("changed the password successfully!!");
-        setPassword("");
-        // redirect to the login page
-        router.push(pageRoutes.SIGN_IN_PAGE);
+        showInfoMsg("we sent you an email please verify it");
+        setName("");
+        setEmail("");
       })
       .catch((e) => {
         setInfoMsgColor(MsgInfoColors.FAILURE);
-        showInfoMsg("could not change the password!");
+        showInfoMsg("data are wrong");
       });
   };
 
-  const changePassword = async (pass: string) => {
-    const request = AxiosRequestService.getChangePasswordRequest(pass, token);
+  const checkIfUserExists = async (
+    name: string,
+    email: string
+  ): Promise<boolean> => {
+    const request = AxiosRequestService.getUserByNameAndEmailRequest(
+      name,
+      email
+    );
     return new Promise<boolean>((resolve, reject) => {
-      AuthService.changePassword(request)
-        .then((user) => {
-          console.log("changed the password", user);
+      AuthService.changePasswordAuth(request)
+        .then((res) => {
           resolve(true);
         })
         .catch((e) => {
-          console.log("err changing the password");
           reject(false);
         });
     });
@@ -59,27 +60,32 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ token }) => {
   };
   return (
     <>
-      <div
-        className={"change-password_container"}
-        style={{ textAlign: "center" }}
-      >
+      <div className={"change-password_container"}>
         <Typography component="h1" variant="h5">
-          Enter New Password
+          Change Password
         </Typography>
         <form
           onSubmit={(e) => handleChangePassword(e)}
           className="change-password_form"
         >
           <TextInput
-            label="password"
-            type="password"
+            label="Name"
+            type="text"
             required={true}
-            selector="password_input"
-            onValueChange={(val) => setPassword(val)}
-            value={password}
+            selector="name_input"
+            onValueChange={(val) => setName(val)}
+            value={name}
+          />
+          <TextInput
+            label="Email"
+            type="text"
+            required={true}
+            selector="email_input"
+            onValueChange={(val) => setEmail(val)}
+            value={email}
           />
           <Button type="submit" fullWidth variant="contained" color="primary">
-            Change Password
+            Send
           </Button>
         </form>
         <InfoMsg msg={infoMsg} color={infoMsgColor}></InfoMsg>
@@ -88,4 +94,4 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ token }) => {
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordAuth;

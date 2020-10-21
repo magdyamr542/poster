@@ -27,5 +27,6 @@ router.delete(
 );
 
 router.post("/changePasswordAuth", UserController.changePasswordAuth); // use this route to check if the user exists to change their password. that is why the router is not authenticated
+router.post("/changePassword", [checkJwt], UserController.changePassword); // use this route to check if the user exists to change their password. that is why the router is not authenticated
 
 export { router as user };

@@ -63,6 +63,26 @@ export class AuthService {
     });
   };
 
+  static changePassword = (req: AxiosRequest): Promise<AuthResponse> => {
+    return new Promise<AuthResponse>(async (resolve, reject) => {
+      try {
+        const res = await axios({
+          method: req.method,
+          data: req.data,
+          url: req.url,
+          headers: req.headers,
+        });
+        resolve({
+          msg: "password changed successfully",
+          data: res.data,
+          token: res.headers["token"],
+        });
+      } catch (e) {
+        reject({ data: {}, msg: "User does not exist", err: e });
+      }
+    });
+  };
+
   static getCurrentLoggedInUser = (): CurrentUser | null => {
     if (process.browser) {
       const cookie = getCookie("token");

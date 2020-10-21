@@ -89,6 +89,21 @@ export class AxiosRequestService {
     return request;
   };
 
+  static getChangePasswordRequest = (
+    newPassword: string,
+    token: string
+  ): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.CHANGE_PASSWORD,
+      headers: {
+        auth: token,
+      },
+      data: { password: newPassword },
+    };
+    return request;
+  };
+
   static getUserByNameAndEmailRequest = (
     name: string,
     email: string

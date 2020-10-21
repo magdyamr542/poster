@@ -9,6 +9,7 @@ export enum Server_Routes {
   DELETE_POST = "http://localhost:4000/post/deletePost",
   GET_POST_BY_ID = "http://localhost:4000/post/getPostById",
   GET_LIMITED_POSTS = "http://localhost:4000/post/getLimitedPosts",
+  CHANGE_PASSWORD = "http://localhost:4000/user/changePassword",
 }
 
 export enum MsgInfoColors {

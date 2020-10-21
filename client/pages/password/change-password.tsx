@@ -1,6 +1,6 @@
 import { Grid } from "@material-ui/core";
 import * as React from "react";
-import ChangePassword from "../../component/ChangePassword";
+import ChangePasswordAuth from "../../component/ChangePasswordAuth";
 
 const changePassword: React.FC = ({}) => {
   return (
@@ -14,7 +14,7 @@ const changePassword: React.FC = ({}) => {
         style={{ minHeight: "50vh", width: "80%", margin: "0 auto" }}
       >
         <Grid item xs={3} style={{ textAlign: "center", maxWidth: "30%" }}>
-          <ChangePassword />
+          <ChangePasswordAuth />
         </Grid>
       </Grid>
     </>

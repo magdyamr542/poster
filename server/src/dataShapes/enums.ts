@@ -22,6 +22,7 @@ export enum HTTPMSG {
   MISSING_ARGS = "Make sure to put the right data in the body of the request like the id!!",
   POST_DELETED = "Post was deleted successfully",
   POST_NOT_FOUND = "Post was not found",
+  EMAIL_NOT_SEND = "Could not send the email please verify your email",
 }
 
 export enum HTTPSTATUS {

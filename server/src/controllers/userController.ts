@@ -116,12 +116,36 @@ export class UserController {
   };
 
   /* Getting a user by its id */
+  static changePassword = async (req: Request, res: Response) => {
+    const id = res.locals.userId;
+    console.log("the id is ", id);
+    const { password } = req.body;
+    let user = await User.findOne({ _id: id });
+    if (!user) {
+      res.status(HTTPSTATUS.NOT_FOUND).send({ err: HTTPMSG.USER_NOT_FOUND });
+      return;
+    }
+    const hashedPassword = await hashPassword(
+      password,
+      PasswordHashing.SALT_ROUNDS
+    );
+    user
+      .update({ password: hashedPassword })
+      .then((user) => {
+        res
+          .status(HTTPSTATUS.SUCCESS)
+          .send({ user: UserController.getUserPublicFields(user) });
+      })
+      .catch((e) => {
+        res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR });
+      });
+  };
+
+  /* Getting a user by its id */
   static changePasswordAuth = async (req: Request, res: Response) => {
     const { name, email } = req.body;
     let user = await User.findOne({ name, email });
     if (!user) {
-      console.log("coming here");
-
       res.status(HTTPSTATUS.NOT_FOUND).send({ err: HTTPMSG.USER_NOT_FOUND });
       return;
     }
@@ -130,13 +154,21 @@ export class UserController {
     const token = await generateToken({ username: user.name, id: user._id });
     const href = `http://localhost:4001/password/forgot-password/${token}`;
     const link = `<a href="${href}">reset-password</a>`;
-    await sendEmail(email as string, link);
+    // try to send the email if worken then tell the user if not then the email of the user is not valid
 
-    // send the user back to the front
-    res.setHeader("token", token); // the token should also be in the href of the link to be able to identify the user in the front end
-    res
-      .status(HTTPSTATUS.SUCCESS)
-      .send({ user: UserController.getUserPublicFields(user) });
+    sendEmail(email as string, link)
+      .then((e) => {
+        res.setHeader("token", token); // the token should also be in the href of the link to be able to identify the user in the front end
+        res
+          .status(HTTPSTATUS.SUCCESS)
+          .send({ user: UserController.getUserPublicFields(user!) });
+        return;
+      })
+      .catch((e) => {
+        res
+          .status(HTTPSTATUS.BAD_REQUEST)
+          .send({ msg: HTTPMSG.EMAIL_NOT_SEND });
+      });
   };
 
   /* Deleting all users */

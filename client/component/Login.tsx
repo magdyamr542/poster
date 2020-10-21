@@ -102,7 +102,7 @@ export const Login: React.FC<{}> = () => {
           />
           <TextInput
             label="Password"
-            type="text"
+            type="password"
             required={true}
             selector="password_input"
             onValueChange={(val) => setPassword(val)}
