@@ -8,14 +8,13 @@ services:
       - "4000:4000"
     volumes:
       - ./server:/usr/src/app
-    links:
-      - poster_db
+    entrypoint: ./wait-for-it.sh poster_db:27017 -- npm run dev:watch #wait for the db image to be ready
 
   poster_db:
     container_name: poster_db
     image: mongo
     ports:
-      - "27018:27017"
+      - "27018:27017" # "host:container"
     command: --quiet
     logging:
       driver: "none"
