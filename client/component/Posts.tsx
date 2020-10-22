@@ -116,6 +116,8 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
             postEmitter={postEmitter}
             userId={e.userId}
             createdAt={e.createdAt!}
+            upVote={e.upVote}
+            downVote={e.downVote}
           ></PostComponent>
         );
       })}

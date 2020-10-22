@@ -130,7 +130,7 @@ export class UserController {
       PasswordHashing.SALT_ROUNDS
     );
     user
-      .update({ password: hashedPassword })
+      .updateOne({ password: hashedPassword })
       .then((user) => {
         res
           .status(HTTPSTATUS.SUCCESS)

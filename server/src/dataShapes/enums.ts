@@ -37,3 +37,8 @@ export enum HTTPSTATUS {
 export enum PasswordHashing {
   SALT_ROUNDS = 10,
 }
+
+export enum VotingEnum {
+  UP = "UP",
+  DOWN = "DOWN",
+}

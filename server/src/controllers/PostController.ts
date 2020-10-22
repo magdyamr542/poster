@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { HTTPMSG, HTTPSTATUS } from "../dataShapes/enums";
+import { HTTPMSG, HTTPSTATUS, VotingEnum } from "../dataShapes/enums";
 import { PostInterface } from "../dataShapes/interfaces";
 import { Post } from "../models/Post.model";
+import { user } from "../routes/user";
 import { UserController } from "./userController";
 
 export class PostController {
@@ -27,6 +28,43 @@ export class PostController {
           .status(HTTPSTATUS.NOT_FOUND)
           .send({ msg: "There is no post with suc id" })
       );
+  };
+
+  /* getting a post by its id */
+  static vote = async (req: Request, res: Response) => {
+    const vote: VotingEnum = req.body.vote;
+    const postId = req.body.postId;
+    const post = await Post.findById(postId);
+    // if post not found you cannot vote on it
+    if (!post) {
+      res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.POST_NOT_FOUND });
+      return;
+    }
+    // update the votes of the post
+    const isUpVote = vote === VotingEnum.UP;
+    if (isUpVote) {
+      post.upVote = post.upVote! + 1;
+    } else {
+      post.downVote = post.downVote! - 1;
+    }
+
+    Post.findOneAndUpdate(
+      { _id: postId },
+      { downVote: post.downVote, upVote: post.upVote },
+      { new: true },
+      undefined
+    )
+      .then((pst) => {
+        console.log("updated the post", pst);
+        res
+          .status(HTTPSTATUS.SUCCESS)
+          .send({ post: pst, msg: "voted on the post successfully" });
+      })
+      .catch((e) => {
+        res
+          .status(HTTPSTATUS.BAD_REQUEST)
+          .send({ msg: "could not save the voting to the db" });
+      });
   };
 
   /* getting a limited number of posts from the db */

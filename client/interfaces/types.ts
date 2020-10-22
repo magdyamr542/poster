@@ -38,4 +38,6 @@ export interface Post {
   username?: string;
   createdAt?: Date;
   userId: string;
+  upVote?: number;
+  downVote?: number;
 }

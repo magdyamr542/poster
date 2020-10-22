@@ -10,6 +10,7 @@ export enum Server_Routes {
   GET_POST_BY_ID = "http://localhost:4000/post/getPostById",
   GET_LIMITED_POSTS = "http://localhost:4000/post/getLimitedPosts",
   CHANGE_PASSWORD = "http://localhost:4000/user/changePassword",
+  VOTE = "http://localhost:4000/post/vote",
 }
 
 export enum MsgInfoColors {
@@ -33,4 +34,9 @@ export enum VotingColors {
   GREEN = "#7adb7a",
   RED = "RED",
   BLACK = "black",
+}
+
+export enum VoteEnum {
+  UP = "UP",
+  DOWN = "DOWN",
 }

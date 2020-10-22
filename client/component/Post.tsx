@@ -13,10 +13,13 @@ import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
-import { EventsEnum } from "../interfaces/enums";
+import { EventsEnum, VoteEnum } from "../interfaces/enums";
 import { useRouter } from "next/router";
 import { Voting } from "./Voting";
 import { ShowAndHideToggle } from "./ShowAndHideToggle";
+import { useState } from "react";
+import { AxiosRequestService } from "../services/AxiosRequestService";
+import { PostService } from "../services/PostService";
 
 interface PostProps {
   title: string;
@@ -26,6 +29,8 @@ interface PostProps {
   postEmitter?: EventEmitter<PostInterface>; // send notification that a post should be deleted
   createdAt?: Date;
   userId: string; // used to control which posts this user can delete
+  upVote?: number;
+  downVote?: number;
 }
 
 export const Post: React.FC<PostProps> = ({
@@ -36,11 +41,20 @@ export const Post: React.FC<PostProps> = ({
   postEmitter,
   createdAt,
   userId,
+  upVote,
+  downVote,
 }) => {
   const postHref: string = `/post/${_id}`;
   const router = useRouter();
   const inPostPage = postEmitter ? false : true;
-  const [showPostTemplate, setShowPostTemplate] = React.useState<boolean>(true);
+  const [showPostTemplate, setShowPostTemplate] = useState<boolean>(true);
+  7;
+  // handlig post voting
+  const [upVoteValue, setUpVoteValue] = useState<number>(upVote!);
+  const [downVoteValue, setDownVoteValue] = useState<number>(downVote!);
+  const [disableUpVote, setDisableUpVote] = useState<boolean>(false);
+  const [disableDownVote, setDisableDownVote] = useState<boolean>(false);
+
   // get the id of the current user
   const canDeletePost = (): boolean => {
     const currentUser = AuthService.getCurrentLoggedInUser();
@@ -65,6 +79,25 @@ export const Post: React.FC<PostProps> = ({
     setShowPostTemplate(true);
   };
 
+  // vote on the post
+  const postVoted = (vote: VoteEnum) => {
+    // make the server request to actually vote on the post
+    const request = AxiosRequestService.getVotingRequest(_id, vote);
+    const response = PostService.voteOnPost(request)
+      .then((post) => {
+        // set the ui when the request succeeds
+        if (vote === VoteEnum.UP) {
+          setUpVoteValue((old) => post.upVote!);
+          setDisableUpVote(true);
+        } else {
+          setDownVoteValue((old) => post.downVote!);
+          setDisableDownVote(true);
+        }
+      })
+      .catch((e) => {
+        console.log("error voting on the post", e);
+      });
+  };
   return (
     <>
       <div
@@ -90,7 +123,13 @@ export const Post: React.FC<PostProps> = ({
                       style={{ display: "flex" }}
                     >
                       {/* voting */}
-                      <Voting value={1} />
+                      <Voting
+                        upVote={upVoteValue!}
+                        downVote={downVoteValue!}
+                        onVote={postVoted}
+                        disableUpVote={disableUpVote}
+                        disableDownVote={disableDownVote}
+                      />
                       <Typography
                         component="h2"
                         variant="h5"
@@ -98,6 +137,7 @@ export const Post: React.FC<PostProps> = ({
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
+                          marginLeft: 15,
                         }}
                       >
                         {title}

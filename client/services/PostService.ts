@@ -66,6 +66,21 @@ export class PostService {
     }
   };
 
+  static voteOnPost = async (request: AxiosRequest): Promise<Post> => {
+    try {
+      const response = await axios({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        data: request.data,
+      });
+      return response.data.post as Post;
+    } catch (e) {
+      console.log("Error on voting for the post", e);
+      return { title: "", content: "", _id: "", userId: "" };
+    }
+  };
+
   static getPostById = async (request: AxiosRequest): Promise<Post> => {
     try {
       const response = await axios({

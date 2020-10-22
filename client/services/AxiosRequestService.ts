@@ -1,5 +1,5 @@
 import { POST_COUNT_TO_GET_WHEN_USER_CLICKS_SHOW_MORE } from "../consts";
-import { Server_Routes } from "../interfaces/enums";
+import { Server_Routes, VoteEnum } from "../interfaces/enums";
 import { AxiosRequest } from "../interfaces/types";
 import { getCookie } from "./cookieService";
 
@@ -115,6 +115,18 @@ export class AxiosRequestService {
         auth: getCookie("token"),
       },
       data: { name, email },
+    };
+    return request;
+  };
+
+  static getVotingRequest = (postId: string, vote: VoteEnum): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.VOTE,
+      headers: {
+        auth: getCookie("token"),
+      },
+      data: { postId, vote },
     };
     return request;
   };

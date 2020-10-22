@@ -15,6 +15,7 @@ router.post("/getPostById", [checkJwt], PostController.getPostById);
 router.post("/addPost", [checkJwt], PostController.addPost);
 router.get("/getUsersPosts", [checkJwt], PostController.getPostsOfUser);
 router.post("/getLimitedPosts", [checkJwt], PostController.getLimitedPosts);
+router.post("/vote", [checkJwt], PostController.vote); // vote for a post
 
 router.delete(
   "/deletePosts",
