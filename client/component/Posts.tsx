@@ -40,6 +40,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     hidePost(deletedPost._id);
   };
 
+  // use pagination
   const getLimitedPosts = (skip: number) => {
     const request = AxiosRequestService.getLimitedPostsRequest(skip);
     return PostService.getLimitedPosts(request);
@@ -90,6 +91,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
       })
       .catch((e) => console.log("error from posts fetching ", e));
   }, []); // the empty array tells react to only make the api call once on mount and that is it
+
   if (!posts) return <ProgressWithMsg msg={"loading posts..."} />;
   if (posts.length === 0)
     return <InfoMsg msg={"There are no posts"} color={"red"} />;
@@ -118,6 +120,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
             createdAt={e.createdAt!}
             upVote={e.upVote}
             downVote={e.downVote}
+            comments={e.comments || []}
           ></PostComponent>
         );
       })}

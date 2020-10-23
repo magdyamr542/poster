@@ -13,7 +13,7 @@ export const Wrapper: React.FC<WrapperProps> = ({ children, size }) => {
         <Box
           style={{
             margin: "25px auto",
-            maxWidth: size === "normal" ? 800 : 400,
+            maxWidth: size === "normal" ? 800 : 600,
             width: "100%",
           }}
           className="wrapper"

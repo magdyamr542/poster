@@ -40,4 +40,13 @@ export interface Post {
   userId: string;
   upVote?: number;
   downVote?: number;
+  comments?: Comment[];
+}
+
+export interface Comment {
+  _id: string;
+  content: string;
+  username: string;
+  userId: string;
+  createdAt?: Date;
 }

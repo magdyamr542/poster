@@ -17,9 +17,18 @@ export interface PostInterface extends mongoose.Document {
   createdAt?: Date;
   upVote?: number;
   downVote?: number;
+  comments?: CommentInterface[];
 }
 
 export interface jwtPayload {
   username: string;
   id: string;
+}
+
+export interface CommentInterface extends mongoose.Document {
+  username: string;
+  userId: string;
+  content: string;
+  createdAt?: Date;
+  _id: string;
 }

@@ -37,6 +37,7 @@ const PostPage: NextPage<PostPageProps> = ({ id }) => {
           username={post.username}
           createdAt={post.createdAt}
           _id={post._id}
+          comments={post.comments}
         />
       </Layout>
     </>

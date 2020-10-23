@@ -1,6 +1,6 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 import { PostInterface } from "../dataShapes/interfaces";
-
+import { Comment } from "./Comment.model";
 const post = new Schema({
   userId: { type: String, required: true },
   title: { type: String, required: false, default: "No Title" },
@@ -9,6 +9,7 @@ const post = new Schema({
   createdAt: { type: Date, required: false, default: Date.now },
   upVote: { type: Number, required: false, default: 0 },
   downVote: { type: Number, required: false, default: 0 },
+  comments: { type: [Comment.schema], required: false, default: [] },
 });
 
 export const Post = model<PostInterface>("post", post);

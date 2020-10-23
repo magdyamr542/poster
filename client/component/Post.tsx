@@ -5,13 +5,14 @@ import {
   CardContent,
   Grid,
   IconButton,
+  Link,
   Typography,
 } from "@material-ui/core";
 import * as React from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
-import { Post as PostInterface } from "../interfaces/types";
+import { Post as PostInterface, Comment } from "../interfaces/types";
 import { AuthService } from "../services/AuthService";
 import { EventsEnum, VoteEnum } from "../interfaces/enums";
 import { useRouter } from "next/router";
@@ -20,6 +21,9 @@ import { ShowAndHideToggle } from "./ShowAndHideToggle";
 import { useState } from "react";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
+import { GREY_COLOR } from "../consts";
+import { Comments } from "./Comments";
+import { parseDate } from "../utils";
 
 interface PostProps {
   title: string;
@@ -31,6 +35,7 @@ interface PostProps {
   userId: string; // used to control which posts this user can delete
   upVote?: number;
   downVote?: number;
+  comments?: Comment[];
 }
 
 export const Post: React.FC<PostProps> = ({
@@ -43,6 +48,7 @@ export const Post: React.FC<PostProps> = ({
   userId,
   upVote,
   downVote,
+  comments,
 }) => {
   const postHref: string = `/post/${_id}`;
   const router = useRouter();
@@ -67,11 +73,6 @@ export const Post: React.FC<PostProps> = ({
   // delete a post
   const handleDeletePost = () => {
     postEmitter!.emit(EventsEnum.DELETE_POST, { userId, title, content, _id });
-  };
-
-  // parse the date
-  const parseDate = () => {
-    return new Date(createdAt!.toString()).toLocaleString();
   };
 
   const handleShowHiddenPost = () => {
@@ -181,15 +182,23 @@ export const Post: React.FC<PostProps> = ({
                         style={{
                           marginRight: 12,
                           fontWeight: "bold",
-                          color: canDeletePost() ? "#3f51b5" : "inherit",
+                          color: canDeletePost() ? "#3f51b5" : GREY_COLOR,
                         }}
                       >
                         {username}
                       </span>{" "}
-                      <span>{parseDate()}</span>
+                      <span>{parseDate(createdAt!)}</span>
                     </Typography>
                     <p style={{ wordBreak: "break-word" }}>{content}</p>
+                    {/* display a btn for the comments to show */}
+                    <p style={{ color: GREY_COLOR, textAlign: "right" }}>
+                      <Link href="#!" color="inherit">
+                        {comments!.length} comment
+                      </Link>
+                    </p>
                   </CardContent>
+                  <Comments comments={comments} />
+
                   <CardActions
                     style={{ display: inPostPage ? "none" : "block" }}
                   >

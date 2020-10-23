@@ -21,7 +21,6 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
       title,
       content
     );
-    console.log("request made", request);
     const _post = await PostService.addPost(request);
     return _post;
   };
