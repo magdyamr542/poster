@@ -130,4 +130,20 @@ export class AxiosRequestService {
     };
     return request;
   };
+
+  static getAddCommentRequest = (
+    content: string,
+    username: string,
+    postId: string
+  ): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.ADD_COMMENT,
+      headers: {
+        auth: getCookie("token"),
+      },
+      data: { content, username, postId },
+    };
+    return request;
+  };
 }

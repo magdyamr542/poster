@@ -11,6 +11,7 @@ export enum Server_Routes {
   GET_LIMITED_POSTS = "http://localhost:4000/post/getLimitedPosts",
   CHANGE_PASSWORD = "http://localhost:4000/user/changePassword",
   VOTE = "http://localhost:4000/post/vote",
+  ADD_COMMENT = "http://localhost:4000/comment/addComment",
 }
 
 export enum MsgInfoColors {

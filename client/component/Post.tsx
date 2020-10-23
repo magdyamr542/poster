@@ -60,6 +60,7 @@ export const Post: React.FC<PostProps> = ({
   const [downVoteValue, setDownVoteValue] = useState<number>(downVote!);
   const [disableUpVote, setDisableUpVote] = useState<boolean>(false);
   const [disableDownVote, setDisableDownVote] = useState<boolean>(false);
+  const [displayComments, setDisplayComments] = useState<boolean>(false);
 
   // get the id of the current user
   const canDeletePost = (): boolean => {
@@ -192,13 +193,21 @@ export const Post: React.FC<PostProps> = ({
                     <p style={{ wordBreak: "break-word" }}>{content}</p>
                     {/* display a btn for the comments to show */}
                     <p style={{ color: GREY_COLOR, textAlign: "right" }}>
-                      <Link href="#!" color="inherit">
+                      <Link
+                        href="#!"
+                        color="inherit"
+                        onClick={(_e: any) => setDisplayComments((old) => !old)}
+                      >
                         {comments!.length} comment
                       </Link>
                     </p>
                   </CardContent>
-                  <Comments comments={comments} />
-
+                  <Comments
+                    comments={comments}
+                    display={displayComments}
+                    username={username}
+                    postId={_id}
+                  />
                   <CardActions
                     style={{ display: inPostPage ? "none" : "block" }}
                   >

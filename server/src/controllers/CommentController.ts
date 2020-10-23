@@ -8,6 +8,7 @@ export class CommentController {
   static addComment = async (req: Request, res: Response) => {
     const userId = res.locals.userId;
     const { postId, content, username } = req.body;
+    console.log(req.body);
     const post = await Post.findById(postId);
     if (!post) {
       res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.POST_NOT_FOUND });
