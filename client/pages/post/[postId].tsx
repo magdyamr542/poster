@@ -18,7 +18,6 @@ const PostPage: NextPage<PostPageProps> = ({ id }) => {
 
   const getPost = async (postId: string) => {
     const postRequest = AxiosRequestService.getGetPostByIdRequest(postId);
-    console.log("the request is ", postRequest);
     const _post = await PostService.getPostById(postRequest);
     setPost(_post);
   };

@@ -21,6 +21,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
       title,
       content
     );
+    console.log("request made", request);
     const _post = await PostService.addPost(request);
     return _post;
   };
@@ -61,6 +62,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
           style={{ margin: leftAlignPadding, width: "40%" }}
           onChange={(e) => setTitle(e.target.value)}
           value={title}
+          required={true}
         />
         <TextField
           placeholder="Content ..."
@@ -71,6 +73,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
           style={{ margin: leftAlignPadding, width: "80%" }}
           onChange={(e) => setContent(e.target.value)}
           value={content}
+          required={true}
         />
         <Button
           type="submit"

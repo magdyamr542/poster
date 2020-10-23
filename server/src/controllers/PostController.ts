@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { HTTPMSG, HTTPSTATUS, VotingEnum } from "../dataShapes/enums";
 import { PostInterface } from "../dataShapes/interfaces";
 import { Post } from "../models/Post.model";
-import { user } from "../routes/user";
 import { UserController } from "./userController";
 
 export class PostController {
@@ -55,7 +54,6 @@ export class PostController {
       undefined
     )
       .then((pst) => {
-        console.log("updated the post", pst);
         res
           .status(HTTPSTATUS.SUCCESS)
           .send({ post: pst, msg: "voted on the post successfully" });
