@@ -69,13 +69,10 @@ export const Post: React.FC<PostProps> = ({
   // run this subscription only once at the first time
   useEffect(() => {
     // if there are handlers dut to component refreshing then do not subscribe
-    if (
-      postEmitter &&
-      postEmitter.getListenersByName(EventsEnum.COMMENT_ADDED).length == 0
-    ) {
+    if (postEmitter) {
       /* listen for adding a new comment */
-      postEmitter!.on(EventsEnum.COMMENT_ADDED, (commentAdded) => {
-        setCommentsLength((old) => old + 1);
+      postEmitter!.on(EventsEnum.COMMENT_ADDED, ({ postId }: any) => {
+        if (postId === _id) setCommentsLength((old) => old + 1);
       });
     }
   }, [postEmitter]);

@@ -41,10 +41,9 @@ export const Comments: React.FC<CommentsProps> = ({
     );
     CommentService.addComment(request)
       .then((post) => {
-        console.log("added comment!");
         setMyComments((old) => post.comments!);
         setCommentValue("");
-        postEmitter?.emit(EventsEnum.COMMENT_ADDED, true);
+        postEmitter?.emit(EventsEnum.COMMENT_ADDED, { postId });
       })
       .catch((e) => {});
   };
