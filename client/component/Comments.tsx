@@ -1,25 +1,32 @@
-import { Card, IconButton } from "@material-ui/core";
 import * as React from "react";
-import { AxiosRequest, Comment } from "../interfaces/types";
+import {
+  AxiosRequest,
+  Comment,
+  Post as PostInterface,
+} from "../interfaces/types";
 import { comment as CommentComponent } from "./Comment";
 import { Wrapper } from "./Wrapper";
 import TextInput from "./TextInput";
 import { useState } from "react";
-import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { CommentService } from "../services/CommentService";
 import { getCookieContent } from "../services/cookieService";
 import { FormEvent } from "react";
+import { EventEmitter } from "../EventEmitter";
+import { EventsEnum } from "../interfaces/enums";
+
 interface CommentsProps {
   comments?: Comment[];
   display: boolean;
   postId?: string;
+  postEmitter?: EventEmitter<PostInterface | any>; // send notification that a post should be deleted
 }
 
 export const Comments: React.FC<CommentsProps> = ({
   comments,
   display,
   postId,
+  postEmitter,
 }) => {
   const [commentValue, setCommentValue] = useState<string>("");
   const [myComments, setMyComments] = useState<Comment[]>(comments!);
@@ -32,12 +39,12 @@ export const Comments: React.FC<CommentsProps> = ({
       username!,
       postId!
     );
-    console.log(request);
     CommentService.addComment(request)
       .then((post) => {
         console.log("added comment!");
         setMyComments((old) => post.comments!);
         setCommentValue("");
+        postEmitter?.emit(EventsEnum.COMMENT_ADDED, true);
       })
       .catch((e) => {});
   };

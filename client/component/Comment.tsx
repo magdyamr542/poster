@@ -1,8 +1,8 @@
-import { Card, CardContent, Typography } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import * as React from "react";
 import { GREY_COLOR } from "../consts";
+import { PostService } from "../services/PostService";
 import { parseDate } from "../utils";
-import { Wrapper } from "./Wrapper";
 
 export interface CommentProps {
   content: string;
@@ -19,6 +19,8 @@ export const comment: React.FC<CommentProps> = ({
   _id,
   userId,
 }) => {
+  // check if the user who wrote this comment is the currently logged in user
+  const canDeletePost = PostService.canDeletePost(userId);
   return (
     <div
       className={"comment_container"}
@@ -35,6 +37,7 @@ export const comment: React.FC<CommentProps> = ({
           style={{
             marginRight: 12,
             fontWeight: "bold",
+            color: canDeletePost ? "#3f51b5" : GREY_COLOR,
           }}
         >
           {username}

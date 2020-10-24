@@ -29,6 +29,7 @@ export enum EventsEnum {
   POST_ADDED = "POST_ADDED",
   HIDE_POST = "HIDE_POST",
   DELETE_POST = "DELETE_POST",
+  COMMENT_ADDED = "COMMENT_ADDED",
 }
 
 export enum VotingColors {

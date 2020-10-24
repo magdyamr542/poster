@@ -13,12 +13,11 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface, Comment } from "../interfaces/types";
-import { AuthService } from "../services/AuthService";
 import { EventsEnum, VoteEnum } from "../interfaces/enums";
 import { useRouter } from "next/router";
 import { Voting } from "./Voting";
 import { ShowAndHideToggle } from "./ShowAndHideToggle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
 import { GREY_COLOR } from "../consts";
@@ -48,25 +47,41 @@ export const Post: React.FC<PostProps> = ({
   userId,
   upVote,
   downVote,
-  comments,
+  comments = [],
 }) => {
+  // getting hrefs for clickable links in this component
   const postHref: string = `/post/${_id}`;
+  const userHref: string = `/user/${userId}`;
   const router = useRouter();
   const inPostPage = postEmitter ? false : true;
-  const [showPostTemplate, setShowPostTemplate] = useState<boolean>(true);
-  7;
   // handlig post voting
   const [upVoteValue, setUpVoteValue] = useState<number>(upVote!);
   const [downVoteValue, setDownVoteValue] = useState<number>(downVote!);
   const [disableUpVote, setDisableUpVote] = useState<boolean>(false);
   const [disableDownVote, setDisableDownVote] = useState<boolean>(false);
   const [displayComments, setDisplayComments] = useState<boolean>(false);
+  const [showPostTemplate, setShowPostTemplate] = useState<boolean>(true);
+  const [commentsLength, setCommentsLength] = useState<number>(
+    comments!.length || 0
+  );
 
-  // get the id of the current user
-  const canDeletePost = (): boolean => {
-    const currentUser = AuthService.getCurrentLoggedInUser();
-    return currentUser?.id === userId;
-  };
+  // register the events needed in this component such as listening to adding a post
+  // run this subscription only once at the first time
+  useEffect(() => {
+    // if there are handlers dut to component refreshing then do not subscribe
+    if (
+      postEmitter &&
+      postEmitter.getListenersByName(EventsEnum.COMMENT_ADDED).length == 0
+    ) {
+      /* listen for adding a new comment */
+      postEmitter!.on(EventsEnum.COMMENT_ADDED, (commentAdded) => {
+        setCommentsLength((old) => old + 1);
+      });
+    }
+  }, [postEmitter]);
+
+  // check if the current user can delete this post
+  const canDeletePost = PostService.canDeletePost(userId);
   // hide a post
   const handleHidePost = () => {
     setShowPostTemplate(false);
@@ -167,7 +182,7 @@ export const Post: React.FC<PostProps> = ({
                       <IconButton
                         onClick={handleDeletePost}
                         style={{ padding: 0, maxHeight: 50 }}
-                        disabled={!canDeletePost()}
+                        disabled={!canDeletePost}
                       >
                         <DeleteIcon titleAccess={"delete"} />
                       </IconButton>
@@ -179,12 +194,13 @@ export const Post: React.FC<PostProps> = ({
                     style={{ padding: "5px 16px" }}
                   >
                     <Typography variant="subtitle1" color={"textSecondary"}>
-                      <Link href="#!">
+                      {/* go to the page of this user */}
+                      <Link href={userHref}>
                         <span
                           style={{
                             marginRight: 12,
                             fontWeight: "bold",
-                            color: canDeletePost() ? "#3f51b5" : GREY_COLOR,
+                            color: canDeletePost ? "#3f51b5" : GREY_COLOR,
                           }}
                         >
                           {username}
@@ -202,7 +218,7 @@ export const Post: React.FC<PostProps> = ({
                         color="inherit"
                         onClick={(_e: any) => setDisplayComments((old) => !old)}
                       >
-                        {comments!.length} comment
+                        {commentsLength} comment
                       </Link>
                     </p>
                   </CardContent>
@@ -210,6 +226,7 @@ export const Post: React.FC<PostProps> = ({
                     comments={comments}
                     display={displayComments}
                     postId={_id}
+                    postEmitter={postEmitter}
                   />
                   <CardActions
                     style={{ display: inPostPage ? "none" : "block" }}

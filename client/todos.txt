@@ -1,0 +1,1 @@
+edit the number of the comments when a comment is added

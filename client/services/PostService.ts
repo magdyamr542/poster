@@ -1,5 +1,6 @@
 import axios from "axios";
 import { AxiosRequest, Post } from "../interfaces/types";
+import { AuthService } from "./AuthService";
 
 export class PostService {
   static getAllPosts = async (request: AxiosRequest): Promise<Post[]> => {
@@ -94,5 +95,12 @@ export class PostService {
       console.log("Error", e);
       return { title: "", content: "", _id: "", userId: "" };
     }
+  };
+
+  // check if the current user can delete this post
+  static canDeletePost = (userId: string): boolean => {
+    const currentUser = AuthService.getCurrentLoggedInUser();
+    if (!currentUser) return false;
+    return currentUser.id === userId;
   };
 }

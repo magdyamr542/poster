@@ -8,7 +8,7 @@ import { Post } from "../interfaces/types";
 interface props {}
 const home: React.FC<props> = () => {
   useRedirectIfNotLoggedIn();
-  const postEventEmitter = new EventEmitter<Post>();
+  const postEventEmitter = new EventEmitter<Post | any>();
 
   return (
     <>
