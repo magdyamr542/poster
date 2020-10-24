@@ -179,18 +179,22 @@ export const Post: React.FC<PostProps> = ({
                     style={{ padding: "5px 16px" }}
                   >
                     <Typography variant="subtitle1" color={"textSecondary"}>
-                      <span
-                        style={{
-                          marginRight: 12,
-                          fontWeight: "bold",
-                          color: canDeletePost() ? "#3f51b5" : GREY_COLOR,
-                        }}
-                      >
-                        {username}
-                      </span>{" "}
+                      <Link href="#!">
+                        <span
+                          style={{
+                            marginRight: 12,
+                            fontWeight: "bold",
+                            color: canDeletePost() ? "#3f51b5" : GREY_COLOR,
+                          }}
+                        >
+                          {username}
+                        </span>
+                      </Link>
                       <span>{parseDate(createdAt!)}</span>
                     </Typography>
-                    <p style={{ wordBreak: "break-word" }}>{content}</p>
+                    <p style={{ wordBreak: "break-word", lineHeight: "30px" }}>
+                      {content}
+                    </p>
                     {/* display a btn for the comments to show */}
                     <p style={{ color: GREY_COLOR, textAlign: "right" }}>
                       <Link
@@ -205,7 +209,6 @@ export const Post: React.FC<PostProps> = ({
                   <Comments
                     comments={comments}
                     display={displayComments}
-                    username={username}
                     postId={_id}
                   />
                   <CardActions

@@ -41,7 +41,7 @@ export const comment: React.FC<CommentProps> = ({
         </span>{" "}
         <span>{parseDate(createdAt!)}</span>
       </Typography>
-      <p style={{ margin: 0 }}>{content}</p>
+      <p style={{ margin: 0, marginTop: 5 }}>{content}</p>
     </div>
   );
 };

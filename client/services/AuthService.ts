@@ -1,6 +1,6 @@
 import { AuthResponse, AxiosRequest, CurrentUser } from "../interfaces/types";
 import axios from "axios";
-import { parseJwtToken, getCookie, removeCookie } from "./cookieService";
+import { getCookie, removeCookie, getCookieContent } from "./cookieService";
 
 /* logging in out and signing up the user */
 export class AuthService {
@@ -89,7 +89,7 @@ export class AuthService {
       if (!cookie || cookie === undefined) {
         return null;
       }
-      const res = parseJwtToken(getCookie("token")!);
+      const res = getCookieContent("token");
       return { username: res.username, id: res.id };
     }
     return null;

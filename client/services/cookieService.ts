@@ -27,6 +27,10 @@ const jwtDecode = (t: string) => {
   return token;
 };
 
-export const parseJwtToken = (token: string): ParsedJwtToken => {
+const parseJwtToken = (token: string): ParsedJwtToken => {
   return jwtDecode(token);
+};
+
+export const getCookieContent = (cookieName: string): ParsedJwtToken => {
+  return parseJwtToken(getCookie(cookieName)!);
 };

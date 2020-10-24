@@ -1,9 +1,7 @@
 import { Grid } from "@material-ui/core";
 import { NextPage } from "next";
 import * as React from "react";
-import { useState, useEffect } from "react";
 import ChangePassword from "../../../component/ChangePassword";
-import { parseJwtToken } from "../../../services/cookieService";
 
 interface ForgotPasswordProps {
   token: string;

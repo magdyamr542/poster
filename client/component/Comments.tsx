@@ -8,23 +8,25 @@ import { useState } from "react";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { CommentService } from "../services/CommentService";
+import { getCookieContent } from "../services/cookieService";
+import { FormEvent } from "react";
 interface CommentsProps {
   comments?: Comment[];
   display: boolean;
-  username?: string;
   postId?: string;
 }
 
 export const Comments: React.FC<CommentsProps> = ({
   comments,
   display,
-  username,
   postId,
 }) => {
   const [commentValue, setCommentValue] = useState<string>("");
   const [myComments, setMyComments] = useState<Comment[]>(comments!);
 
-  const addComment = async () => {
+  const addComment = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const username = getCookieContent("token").username;
     const request: AxiosRequest = AxiosRequestService.getAddCommentRequest(
       commentValue,
       username!,
@@ -39,13 +41,22 @@ export const Comments: React.FC<CommentsProps> = ({
       })
       .catch((e) => {});
   };
+
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("submitted");
+  };
   return (
     <div
       className={"comments_container"}
       style={{ display: display ? "block" : "none" }}
     >
       <Wrapper size={"small"}>
-        <Card style={{ padding: 12 }}>
+        <div
+          style={{
+            padding: 12,
+          }}
+        >
           <h3>Comments</h3>
           {myComments?.map((c) => {
             return (
@@ -59,19 +70,19 @@ export const Comments: React.FC<CommentsProps> = ({
             );
           })}
           <div className="addComment" style={{ display: "flex" }}>
-            <TextInput
-              label={"add comment"}
-              name={"add comment"}
-              value={commentValue}
-              selector={"add_comment_container"}
-              onValueChange={(e) => setCommentValue(e as string)}
-              required={true}
-            ></TextInput>
-            <IconButton title={"add comment"} onClick={addComment}>
-              <ChatBubbleOutlineIcon />
-            </IconButton>
+            <form onSubmit={addComment} style={{ width: "60%" }}>
+              <TextInput
+                label={"add comment"}
+                name={"add comment"}
+                value={commentValue}
+                selector={"add_comment_container"}
+                onValueChange={(e) => setCommentValue(e as string)}
+                required={true}
+              ></TextInput>
+              <input type="submit" style={{ display: "none" }}></input>
+            </form>
           </div>
-        </Card>
+        </div>
       </Wrapper>
     </div>
   );

@@ -1,6 +1,6 @@
 import { InfoMsgProps } from "../component/InfoMsg";
 
-export type TextInputType = "email" | "password" | "text" | "number";
+export type TextInputType = "email" | "password" | "text" | "number" | "submit";
 export interface InfoMsgInterface extends InfoMsgProps {}
 export type AxiosMethod = "get" | "post" | "delete";
 export interface AxiosRequest {
