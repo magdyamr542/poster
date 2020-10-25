@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
 import { Post } from "../interfaces/types";
-import { addPost } from "../redux/actionCreators";
+import { addPost, addPosts } from "../redux/actionCreators";
 import { store } from "../redux/createStore";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
@@ -31,7 +31,7 @@ export const Posts: React.FC<PostsProps> = ({}) => {
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
       // whenever the posts change
-      console.log(store.getState().posts);
+      console.log(store.getState().posts.posts);
       setPosts(store.getState().posts.posts);
     });
     return unsubscribe;
@@ -52,7 +52,7 @@ export const Posts: React.FC<PostsProps> = ({}) => {
     const _posts = getLimitedPosts(0)
       .then((d) => {
         // set the posts and mark where we are currently at
-        d.posts.forEach((p) => store.dispatch(addPost(p)));
+        store.dispatch(addPosts(d.posts));
         setPosts(d.posts);
         setCurrentlyAt(d.currentlyAt);
       })

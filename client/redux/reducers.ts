@@ -2,6 +2,7 @@ import { Post, Comment } from "../interfaces/types";
 import {
   ADD_COMMENT,
   ADD_POST,
+  ADD_POSTS,
   DELETE_POST,
   PostActionTypes,
   UPDATE_POST,
@@ -33,6 +34,12 @@ export const postReducer = (
           }
           return p;
         }),
+      };
+
+    /* adding an array of posts */
+    case ADD_POSTS:
+      return {
+        posts: [...action.payload.posts, ...state.posts],
       };
     /* adding a comment */
     case ADD_COMMENT:

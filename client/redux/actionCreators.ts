@@ -5,6 +5,7 @@ import {
   DELETE_POST,
   ADD_COMMENT,
   UPDATE_POST,
+  ADD_POSTS,
 } from "./actionsTypes";
 
 export const addPost = (post: Post): PostActionTypes => {
@@ -21,6 +22,25 @@ export const deletePost = (post: Post): PostActionTypes => {
   };
 };
 
+export const updatePost = (postId: string, newPost: Post): PostActionTypes => {
+  return {
+    type: UPDATE_POST,
+    payload: {
+      postId,
+      newPost,
+    },
+  };
+};
+
+export const addPosts = (posts: Post[]): PostActionTypes => {
+  return {
+    type: ADD_POSTS,
+    payload: {
+      posts,
+    },
+  };
+};
+
 export const addComment = (
   comment: Comment,
   postId: string
@@ -30,16 +50,6 @@ export const addComment = (
     payload: {
       newComment: comment,
       postId,
-    },
-  };
-};
-
-export const updatePost = (postId: string, newPost: Post): PostActionTypes => {
-  return {
-    type: UPDATE_POST,
-    payload: {
-      postId,
-      newPost,
     },
   };
 };

@@ -61,9 +61,6 @@ export const Post: React.FC<PostProps> = ({
   const [disableDownVote, setDisableDownVote] = useState<boolean>(false);
   const [displayComments, setDisplayComments] = useState<boolean>(false);
   const [showPostTemplate, setShowPostTemplate] = useState<boolean>(true);
-  const [commentsLength, setCommentsLength] = useState<number>(
-    comments!.length || 0
-  );
 
   // check if the current user can delete this post
   const canDeletePost = PostService.canDeletePost(userId);
@@ -98,7 +95,6 @@ export const Post: React.FC<PostProps> = ({
     PostService.voteOnPost(request)
       .then((post) => {
         // set the ui when the request succeeds
-        console.log(post);
         store.dispatch(updatePost(_id, post));
         if (vote === VoteEnum.UP) {
           setDisableUpVote(true);
