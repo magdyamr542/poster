@@ -17,6 +17,21 @@ export class PostService {
     }
   };
 
+  static getPostsOfUser = async (request: AxiosRequest): Promise<Post[]> => {
+    try {
+      const response = await axios({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        data: request.data,
+      });
+      return response.data.posts as Post[];
+    } catch (e) {
+      console.log("Error getting the posts of a user with his id", e);
+      return [];
+    }
+  };
+
   static addPost = async (request: AxiosRequest): Promise<Post> => {
     try {
       const response = await axios({

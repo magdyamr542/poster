@@ -3,6 +3,7 @@ import {
   ADD_COMMENT,
   ADD_POST,
   ADD_POSTS,
+  CLEAR_POSTS,
   DELETE_POST,
   PostActionTypes,
   UPDATE_POST,
@@ -48,6 +49,10 @@ export const postReducer = (
         action.payload.newComment,
         action.payload.postId
       );
+
+    /* clearing the posts */
+    case CLEAR_POSTS:
+      return { posts: [] };
     default:
       return state;
   }

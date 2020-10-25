@@ -9,6 +9,7 @@ export enum Server_Routes {
   ADD_POST = "http://localhost:4000/post/addPost",
   DELETE_POST = "http://localhost:4000/post/deletePost",
   GET_POST_BY_ID = "http://localhost:4000/post/getPostById",
+  GET_POSTS_OF_USER = "http://localhost:4000/post/getPostsOfUser",
   GET_LIMITED_POSTS = "http://localhost:4000/post/getLimitedPosts",
   CHANGE_PASSWORD = "http://localhost:4000/user/changePassword",
   VOTE = "http://localhost:4000/post/vote",

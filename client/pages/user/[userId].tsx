@@ -30,7 +30,7 @@ const UserPage: NextPage<UserPageProps> = ({ userId }) => {
   };
 
   if (!user)
-    return <InfoMsg color={"red"} msg={"getting the user..."}></InfoMsg>;
+    return <InfoMsg color={"red"} msg={"getting the user ..."}></InfoMsg>;
   return (
     <>
       <Layout size={"normal"}>

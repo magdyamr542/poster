@@ -6,6 +6,7 @@ import {
   ADD_COMMENT,
   UPDATE_POST,
   ADD_POSTS,
+  CLEAR_POSTS,
 } from "./actionsTypes";
 
 export const addPost = (post: Post): PostActionTypes => {
@@ -38,6 +39,12 @@ export const addPosts = (posts: Post[]): PostActionTypes => {
     payload: {
       posts,
     },
+  };
+};
+
+export const clearPosts = (): PostActionTypes => {
+  return {
+    type: CLEAR_POSTS,
   };
 };
 

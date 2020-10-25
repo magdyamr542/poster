@@ -101,8 +101,10 @@ export class PostController {
 
   /* Getting the posts to a specific user */
   static getPostsOfUser = (req: Request, res: Response) => {
-    const userId: string = res.locals.userId;
+    const userId: string = req.body.userId;
+    console.log(userId, "slkfjsdf");
     Post.find({ userId })
+      .sort({ createdAt: -1 })
       .then((posts) => res.status(HTTPSTATUS.SUCCESS).send({ posts }))
       .catch((e) =>
         res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.POST_DB_ERROR })

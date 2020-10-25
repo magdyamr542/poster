@@ -5,6 +5,7 @@ export const ADD_COMMENT = "ADD_COMMENT";
 export const DELETE_POST = "DELETE_POST";
 export const UPDATE_POST = "UPDATE_POST";
 export const ADD_POSTS = "ADD_POSTS";
+export const CLEAR_POSTS = "CLEAR_POSTS";
 
 /* action type */
 interface ADD_POST_ACTION {
@@ -23,6 +24,10 @@ interface UPDATE_POST_ACTION {
     postId: string;
     newPost: Post;
   };
+}
+
+interface CLEAR_POSTS_ACTION {
+  type: typeof CLEAR_POSTS;
 }
 
 interface ADD_POSTS_ACTION {
@@ -46,4 +51,5 @@ export type PostActionTypes =
   | DELETE_POST_ACTION
   | ADD_COMMENT_ACTION
   | UPDATE_POST_ACTION
-  | ADD_POSTS_ACTION;
+  | ADD_POSTS_ACTION
+  | CLEAR_POSTS_ACTION;

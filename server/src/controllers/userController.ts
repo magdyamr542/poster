@@ -99,7 +99,6 @@ export class UserController {
 
   /* Getting a user by its id */
   static getUserById = async (req: Request, res: Response) => {
-    console.log(req.body);
     if (!req.body.id) {
       res.status(HTTPSTATUS.BAD_REQUEST).send({ err: HTTPMSG.ID_MISSING });
       return;
@@ -119,7 +118,6 @@ export class UserController {
   /* Getting a user by its id */
   static changePassword = async (req: Request, res: Response) => {
     const id = res.locals.userId;
-    console.log("the id is ", id);
     const { password } = req.body;
     let user = await User.findOne({ _id: id });
     if (!user) {
