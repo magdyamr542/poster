@@ -6,12 +6,12 @@ import { AxiosRequest, Post } from "../interfaces/types";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
 import { EventsEnum } from "../interfaces/enums";
+import { store } from "../redux/createStore";
+import { addPost as addPostAction } from "../redux/actionCreators";
 
-interface AddPostProps {
-  postEmitter: EventEmitter<Post>; // used to communicate with the posts component
-}
+interface AddPostProps {}
 
-export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
+export const AddPost: React.FC<AddPostProps> = ({}) => {
   const leftAlignPadding = 25;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -28,7 +28,7 @@ export const AddPost: React.FC<AddPostProps> = ({ postEmitter }) => {
   const handleAddPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const post = await addPost(title, content);
-    postEmitter.emit(EventsEnum.POST_ADDED, post); // publish that a post was added
+    store.dispatch(addPostAction(post));
     setTitle("");
     setContent("");
   };

@@ -6,6 +6,7 @@ import { Layout } from "../../component/Layout";
 import { Post } from "../../component/Post";
 import { ProgressWithMsg } from "../../component/ProgressWithMsg";
 import { Post as PostInterface } from "../../interfaces/types";
+import { store } from "../../redux/createStore";
 import { AxiosRequestService } from "../../services/AxiosRequestService";
 import { PostService } from "../../services/PostService";
 
@@ -24,6 +25,12 @@ const PostPage: NextPage<PostPageProps> = ({ id }) => {
 
   useEffect(() => {
     getPost(postId);
+    store.subscribe(() => {
+      const postAfterBeingUpdatedForSomeUiReason = store
+        .getState()
+        .posts.posts.filter((p) => p._id === postId)[0];
+      setPost(postAfterBeingUpdatedForSomeUiReason);
+    });
   }, [postId]);
 
   if (!post) return <ProgressWithMsg msg={"loading the post..."} />;
@@ -38,6 +45,9 @@ const PostPage: NextPage<PostPageProps> = ({ id }) => {
           createdAt={post.createdAt}
           _id={post._id}
           comments={post.comments}
+          upVote={post.upVote}
+          downVote={post.downVote}
+          showMore={false}
         />
       </Layout>
     </>

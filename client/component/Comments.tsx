@@ -11,25 +11,21 @@ import { useState } from "react";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { CommentService } from "../services/CommentService";
 import { getCookieContent } from "../services/cookieService";
-import { FormEvent } from "react";
-import { EventEmitter } from "../EventEmitter";
-import { EventsEnum } from "../interfaces/enums";
+import { store } from "../redux/createStore";
+import { addComment as addCommentAction } from "../redux/actionCreators";
 
 interface CommentsProps {
   comments?: Comment[];
   display: boolean;
   postId?: string;
-  postEmitter?: EventEmitter<PostInterface | any>; // send notification that a post should be deleted
 }
 
 export const Comments: React.FC<CommentsProps> = ({
   comments,
   display,
   postId,
-  postEmitter,
 }) => {
   const [commentValue, setCommentValue] = useState<string>("");
-  const [myComments, setMyComments] = useState<Comment[]>(comments!);
 
   const addComment = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,16 +37,12 @@ export const Comments: React.FC<CommentsProps> = ({
     );
     CommentService.addComment(request)
       .then((post) => {
-        setMyComments((old) => post.comments!);
+        store.dispatch(
+          addCommentAction(post.comments![post.comments!.length - 1], post._id)
+        );
         setCommentValue("");
-        postEmitter?.emit(EventsEnum.COMMENT_ADDED, { postId });
       })
       .catch((e) => {});
-  };
-
-  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("submitted");
   };
   return (
     <div
@@ -64,7 +56,7 @@ export const Comments: React.FC<CommentsProps> = ({
           }}
         >
           <h3>Comments</h3>
-          {myComments?.map((c) => {
+          {comments?.map((c) => {
             return (
               <CommentComponent
                 content={c.content}

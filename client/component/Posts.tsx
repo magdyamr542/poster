@@ -3,19 +3,17 @@ import { useRouter } from "next/router";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
-import { EventEmitter } from "../EventEmitter";
-import { EventsEnum, pageRoutes } from "../interfaces/enums";
 import { Post } from "../interfaces/types";
+import { addPost } from "../redux/actionCreators";
+import { store } from "../redux/createStore";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
 import { InfoMsg } from "./InfoMsg";
 import { Post as PostComponent } from "./Post";
 import { ProgressWithMsg } from "./ProgressWithMsg";
 
-interface PostsProps {
-  postEmitter: EventEmitter<Post>;
-}
-export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
+interface PostsProps {}
+export const Posts: React.FC<PostsProps> = ({}) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [currentlyAt, setCurrentlyAt] = useState(0); // at the beginning we skip 0 posts
   const [displayLoadMorePostsBtn, setDisplayLoadMorePostsBtn] = useState<
@@ -23,59 +21,27 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
   >(true);
   const router = useRouter();
 
-  /* hide a post */
-  const hidePost = (postId: string) => {
-    setPosts((oldPosts) => oldPosts!.filter((post) => post._id !== postId));
-  };
-
-  /* delete the post entirely from the db */
-  const deletePost = async (postId: string) => {
-    const deleteRequest = AxiosRequestService.getDeletePostRequest(postId);
-    const deletedPost = await PostService.deletePost(deleteRequest);
-    if (deletedPost._id.length == 0) {
-      // we got an error so we need to login
-      router.push(pageRoutes.SIGN_IN_PAGE);
-      return;
-    }
-    hidePost(deletedPost._id);
-  };
-
   // use pagination
   const getLimitedPosts = (skip: number) => {
     const request = AxiosRequestService.getLimitedPostsRequest(skip);
     return PostService.getLimitedPosts(request);
   };
 
-  // run this subscription only once at the first time
+  /* subscribe to redux store */
   useEffect(() => {
-    // if there are handlers dut to component refreshing then do not subscribe
-    if (postEmitter.getListenersByName(EventsEnum.POST_ADDED).length == 0) {
-      /* listen for adding a new post */
-      postEmitter.on(EventsEnum.POST_ADDED, (post) => {
-        setPosts((old) => (old === null ? [post] : [post, ...old]));
-      });
-    }
-
-    if (postEmitter.getListenersByName(EventsEnum.HIDE_POST).length == 0) {
-      /* listen for hiding a post */
-      postEmitter.on(EventsEnum.HIDE_POST, (post) => {
-        hidePost(post._id);
-      });
-    }
-
-    if (postEmitter.getListenersByName(EventsEnum.DELETE_POST).length == 0) {
-      /* listen for removing a post */
-      postEmitter.on(EventsEnum.DELETE_POST, (post) => {
-        deletePost(post._id);
-      });
-    }
-  }, [postEmitter]);
+    const unsubscribe = store.subscribe(() => {
+      // whenever the posts change
+      console.log(store.getState().posts);
+      setPosts(store.getState().posts.posts);
+    });
+    return unsubscribe;
+  }, []);
 
   /* loading more posts when the user clicks the load more button */
   const handleLoadMorePosts = () => {
     getLimitedPosts(currentlyAt)
       .then((d) => {
-        setPosts((old) => [...old!, ...d.posts]);
+        d.posts.forEach((p) => store.dispatch(addPost(p)));
         setCurrentlyAt(d.currentlyAt);
         setDisplayLoadMorePostsBtn(d.posts.length !== 0);
       })
@@ -86,6 +52,7 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
     const _posts = getLimitedPosts(0)
       .then((d) => {
         // set the posts and mark where we are currently at
+        d.posts.forEach((p) => store.dispatch(addPost(p)));
         setPosts(d.posts);
         setCurrentlyAt(d.currentlyAt);
       })
@@ -115,7 +82,6 @@ export const Posts: React.FC<PostsProps> = ({ postEmitter }) => {
             _id={e._id}
             key={i}
             username={e.username}
-            postEmitter={postEmitter}
             userId={e.userId}
             createdAt={e.createdAt!}
             upVote={e.upVote}

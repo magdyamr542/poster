@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import RemoveRedEyeOutlinedIcon from "@material-ui/icons/RemoveRedEyeOutlined";
 import { EventEmitter } from "../EventEmitter";
 import { Post as PostInterface, Comment } from "../interfaces/types";
-import { EventsEnum, VoteEnum } from "../interfaces/enums";
+import { EventsEnum, pageRoutes, VoteEnum } from "../interfaces/enums";
 import { useRouter } from "next/router";
 import { Voting } from "./Voting";
 import { ShowAndHideToggle } from "./ShowAndHideToggle";
@@ -23,18 +23,20 @@ import { PostService } from "../services/PostService";
 import { GREY_COLOR } from "../consts";
 import { Comments } from "./Comments";
 import { parseDate } from "../utils";
+import { store } from "../redux/createStore";
+import { deletePost, updatePost } from "../redux/actionCreators";
 
 interface PostProps {
   title: string;
   content: string;
   username?: string; // display in the post ui
   _id: string; // for removing the post
-  postEmitter?: EventEmitter<PostInterface>; // send notification that a post should be deleted
   createdAt?: Date;
   userId: string; // used to control which posts this user can delete
   upVote?: number;
   downVote?: number;
   comments?: Comment[];
+  showMore?: boolean;
 }
 
 export const Post: React.FC<PostProps> = ({
@@ -42,21 +44,19 @@ export const Post: React.FC<PostProps> = ({
   content,
   _id,
   username,
-  postEmitter,
   createdAt,
   userId,
   upVote,
   downVote,
   comments = [],
+  showMore = true,
 }) => {
   // getting hrefs for clickable links in this component
   const postHref: string = `/post/${_id}`;
   const userHref: string = `/user/${userId}`;
   const router = useRouter();
-  const inPostPage = postEmitter ? false : true;
+  const inPostPage = !showMore;
   // handlig post voting
-  const [upVoteValue, setUpVoteValue] = useState<number>(upVote!);
-  const [downVoteValue, setDownVoteValue] = useState<number>(downVote!);
   const [disableUpVote, setDisableUpVote] = useState<boolean>(false);
   const [disableDownVote, setDisableDownVote] = useState<boolean>(false);
   const [displayComments, setDisplayComments] = useState<boolean>(false);
@@ -65,46 +65,44 @@ export const Post: React.FC<PostProps> = ({
     comments!.length || 0
   );
 
-  // register the events needed in this component such as listening to adding a post
-  // run this subscription only once at the first time
-  useEffect(() => {
-    // if there are handlers dut to component refreshing then do not subscribe
-    if (postEmitter) {
-      /* listen for adding a new comment */
-      postEmitter!.on(EventsEnum.COMMENT_ADDED, ({ postId }: any) => {
-        if (postId === _id) setCommentsLength((old) => old + 1);
-      });
-    }
-  }, [postEmitter]);
-
   // check if the current user can delete this post
   const canDeletePost = PostService.canDeletePost(userId);
   // hide a post
-  const handleHidePost = () => {
-    setShowPostTemplate(false);
-  };
+
   // delete a post
-  const handleDeletePost = () => {
-    postEmitter!.emit(EventsEnum.DELETE_POST, { userId, title, content, _id });
+  const handleDeletePost = async () => {
+    const deleteRequest = AxiosRequestService.getDeletePostRequest(_id);
+    const deletedPost = await PostService.deletePost(deleteRequest);
+    console.log(deletedPost);
+    if (deletedPost._id.length == 0) {
+      // we got an error so we need to login
+      router.push(pageRoutes.SIGN_IN_PAGE);
+      return;
+    }
+    const postToDelete: PostInterface = { userId, title, content, _id };
+    store.dispatch(deletePost(postToDelete));
   };
 
   const handleShowHiddenPost = () => {
-    // the post was hidden and we want to display it
     setShowPostTemplate(true);
+  };
+
+  const handleHidePost = () => {
+    setShowPostTemplate(false);
   };
 
   // vote on the post
   const postVoted = (vote: VoteEnum) => {
     // make the server request to actually vote on the post
     const request = AxiosRequestService.getVotingRequest(_id, vote);
-    const response = PostService.voteOnPost(request)
+    PostService.voteOnPost(request)
       .then((post) => {
         // set the ui when the request succeeds
+        console.log(post);
+        store.dispatch(updatePost(_id, post));
         if (vote === VoteEnum.UP) {
-          setUpVoteValue((old) => post.upVote!);
           setDisableUpVote(true);
         } else {
-          setDownVoteValue((old) => post.downVote!);
           setDisableDownVote(true);
         }
       })
@@ -138,8 +136,8 @@ export const Post: React.FC<PostProps> = ({
                     >
                       {/* voting */}
                       <Voting
-                        upVote={upVoteValue!}
-                        downVote={downVoteValue!}
+                        upVote={upVote!}
+                        downVote={downVote!}
                         onVote={postVoted}
                         disableUpVote={disableUpVote}
                         disableDownVote={disableDownVote}
@@ -215,7 +213,7 @@ export const Post: React.FC<PostProps> = ({
                         color="inherit"
                         onClick={(_e: any) => setDisplayComments((old) => !old)}
                       >
-                        {commentsLength} comment
+                        {comments.length} comment
                       </Link>
                     </p>
                   </CardContent>
@@ -223,7 +221,6 @@ export const Post: React.FC<PostProps> = ({
                     comments={comments}
                     display={displayComments}
                     postId={_id}
-                    postEmitter={postEmitter}
                   />
                   <CardActions
                     style={{ display: inPostPage ? "none" : "block" }}
