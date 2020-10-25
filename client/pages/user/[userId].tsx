@@ -3,6 +3,7 @@ import * as React from "react";
 import { useEffect } from "react";
 import { InfoMsg } from "../../component/InfoMsg";
 import { Layout } from "../../component/Layout";
+import { UserProfile } from "../../component/UserProfile";
 import { User } from "../../interfaces/types";
 import { AxiosRequestService } from "../../services/AxiosRequestService";
 import { UserService } from "../../services/UserService";
@@ -33,7 +34,7 @@ const UserPage: NextPage<UserPageProps> = ({ userId }) => {
   return (
     <>
       <Layout size={"normal"}>
-        <div>hello user with id {userId}</div>
+        <UserProfile username={user.name} userId={userId} email={user.email} />
       </Layout>
     </>
   );

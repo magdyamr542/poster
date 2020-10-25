@@ -3,6 +3,7 @@ import * as React from "react";
 import { GREY_COLOR } from "../consts";
 import { PostService } from "../services/PostService";
 import { parseDate } from "../utils";
+import { UsernameLink } from "./UsernameLink";
 
 export interface CommentProps {
   content: string;
@@ -33,15 +34,11 @@ export const comment: React.FC<CommentProps> = ({
       }}
     >
       <Typography variant="subtitle1" color={"textSecondary"}>
-        <span
-          style={{
-            marginRight: 12,
-            fontWeight: "bold",
-            color: canDeletePost ? "#3f51b5" : GREY_COLOR,
-          }}
-        >
-          {username}
-        </span>{" "}
+        <UsernameLink
+          color={canDeletePost ? "#3f51b5" : GREY_COLOR}
+          username={username}
+          userId={userId}
+        />
         <span>{parseDate(createdAt!)}</span>
       </Typography>
       <p style={{ margin: 0, marginTop: 5 }}>{content}</p>
