@@ -41,7 +41,7 @@ export const Posts: React.FC<PostsProps> = ({}) => {
   const handleLoadMorePosts = () => {
     getLimitedPosts(currentlyAt)
       .then((d) => {
-        d.posts.forEach((p) => store.dispatch(addPost(p)));
+        store.dispatch(addPosts(d.posts));
         setCurrentlyAt(d.currentlyAt);
         setDisplayLoadMorePostsBtn(d.posts.length !== 0);
       })

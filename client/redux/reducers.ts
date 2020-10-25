@@ -39,7 +39,7 @@ export const postReducer = (
     /* adding an array of posts */
     case ADD_POSTS:
       return {
-        posts: [...action.payload.posts, ...state.posts],
+        posts: [...state.posts, ...action.payload.posts],
       };
     /* adding a comment */
     case ADD_COMMENT:
