@@ -3,6 +3,7 @@ export enum Server_Routes {
   LOG_IN = "http://localhost:4000/auth/login",
   LOG_OUT = "http://localhost:4000/auth/logout",
   GET_ALL_USERS = "http://localhost:4000/user/getUsers",
+  GET_USER_BY_ID = "http://localhost:4000/user/getUserById",
   CHANGE_PASSWORD_AUTH = "http://localhost:4000/user/changePasswordAuth",
   GET_ALL_POSTS = "http://localhost:4000/post/getPosts",
   ADD_POST = "http://localhost:4000/post/addPost",

@@ -15,11 +15,7 @@ router.get(
   [checkJwt, checkRole(rolesWhichHaveAccessToRecords)],
   UserController.getAllUsers
 ); // adding this middleware so only admins can access the users
-router.get(
-  "/getUserById",
-  [checkJwt, checkRole(rolesWhichHaveAccessToRecords)],
-  UserController.getUserById
-);
+router.post("/getUserById", [checkJwt], UserController.getUserById);
 router.delete(
   "/deleteAll",
   [checkJwt, checkRole(rolesWhichHaveAccessToRecords)],

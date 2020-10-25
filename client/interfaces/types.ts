@@ -31,6 +31,12 @@ export interface CurrentUser {
   id: string;
 }
 
+export interface User {
+  name: string;
+  email: string;
+  role: string;
+}
+
 export interface Post {
   _id: string;
   title: string;

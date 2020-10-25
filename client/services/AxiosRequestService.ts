@@ -30,6 +30,18 @@ export class AxiosRequestService {
     return request;
   };
 
+  static getUserByIdRequest = (id: string): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.GET_USER_BY_ID,
+      data: { id },
+      headers: {
+        auth: getCookie("token"),
+      },
+    };
+    return request;
+  };
+
   static getAllPostsRequest = (): AxiosRequest => {
     const request: AxiosRequest = {
       method: "get",

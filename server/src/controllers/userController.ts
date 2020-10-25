@@ -99,6 +99,7 @@ export class UserController {
 
   /* Getting a user by its id */
   static getUserById = async (req: Request, res: Response) => {
+    console.log(req.body);
     if (!req.body.id) {
       res.status(HTTPSTATUS.BAD_REQUEST).send({ err: HTTPMSG.ID_MISSING });
       return;

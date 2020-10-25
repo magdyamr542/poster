@@ -25,6 +25,7 @@ import { Comments } from "./Comments";
 import { parseDate } from "../utils";
 import { store } from "../redux/createStore";
 import { deletePost, updatePost } from "../redux/actionCreators";
+import { UsernameLink } from "./UsernameLink";
 
 interface PostProps {
   title: string;
@@ -186,17 +187,11 @@ export const Post: React.FC<PostProps> = ({
                   >
                     <Typography variant="subtitle1" color={"textSecondary"}>
                       {/* go to the page of this user */}
-                      <Link href={userHref}>
-                        <span
-                          style={{
-                            marginRight: 12,
-                            fontWeight: "bold",
-                            color: canDeletePost ? "#3f51b5" : GREY_COLOR,
-                          }}
-                        >
-                          {username}
-                        </span>
-                      </Link>
+                      <UsernameLink
+                        username={username || ""}
+                        userId={userId}
+                        color={canDeletePost ? "#3f51b5" : GREY_COLOR}
+                      />
                       <span>{parseDate(createdAt!)}</span>
                     </Typography>
                     <p style={{ wordBreak: "break-word", lineHeight: "30px" }}>
