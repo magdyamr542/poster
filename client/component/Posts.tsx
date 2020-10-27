@@ -4,7 +4,7 @@ import * as React from "react";
 import { useState, useEffect } from "react";
 import { MAX_CONTENT_LENGTH_TO_SHOW_IN_HOME_PAGE } from "../consts";
 import { Post } from "../interfaces/types";
-import { addPost, addPosts } from "../redux/actionCreators";
+import { addPosts, clearPosts } from "../redux/actionCreators";
 import { store } from "../redux/createStore";
 import { AxiosRequestService } from "../services/AxiosRequestService";
 import { PostService } from "../services/PostService";
@@ -33,7 +33,9 @@ export const Posts: React.FC<PostsProps> = ({}) => {
       // whenever the posts change
       setPosts(store.getState().posts.posts);
     });
-    return unsubscribe;
+    return () => {
+      store.dispatch(clearPosts());
+    };
   }, []);
 
   /* loading more posts when the user clicks the load more button */

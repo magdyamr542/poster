@@ -1,17 +1,11 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  CardActions,
-  Button,
-} from "@material-ui/core";
+import { Card, CardContent } from "@material-ui/core";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { GREY_COLOR } from "../consts";
 import { Post } from "../interfaces/types";
 import { addPosts, clearPosts } from "../redux/actionCreators";
 import { store } from "../redux/createStore";
 import { AxiosRequestService } from "../services/AxiosRequestService";
+import { getCookieContent } from "../services/cookieService";
 import { PostService } from "../services/PostService";
 import { InfoMsg } from "./InfoMsg";
 import { Post as PostComponent } from "./Post";
@@ -27,11 +21,13 @@ export const UserProfile: React.FC<UserProfileProps> = ({
   username,
   email,
 }) => {
+  /* vars */
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const loggedInUserId = getCookieContent("token").id;
 
   // listen for any changes on the redux store
   useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
+    store.subscribe(() => {
       setPosts(store.getState().posts.posts);
     });
     /* clear the posts when you are done */
@@ -39,6 +35,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       store.dispatch(clearPosts());
     };
   }, []);
+
+  /* getting the posts */
   const getUsersPosts = async (userId: string) => {
     const request = AxiosRequestService.getGetPostsOfUserRequest(userId);
     PostService.getPostsOfUser(request)
@@ -50,6 +48,25 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       });
   };
 
+  useEffect(() => {
+    getUsersPosts(userId);
+  }, []);
+
+  /* getting the number of the written posts by the user */
+  const getNumberOfWrittenPosts = () => {
+    if (!posts) return "-";
+    return posts.length;
+  };
+
+  /* showing the email of the user only to the user or to the admins */
+  const showEmailOfTheUser = () => {
+    if (userId === loggedInUserId) return email;
+    return "*******";
+  };
+  /* getting the number of the posts that this user has commented on */
+  const loadedPosts = posts !== null;
+
+  /* generating the markup */
   const postsHtml = () => {
     if (posts!.length === 0)
       return (
@@ -80,12 +97,6 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       </div>
     );
   };
-
-  useEffect(() => {
-    getUsersPosts(userId);
-  }, []);
-
-  const loadedPosts = posts !== null;
   return (
     <>
       <Card>
@@ -108,7 +119,19 @@ export const UserProfile: React.FC<UserProfileProps> = ({
                 className="profile_username"
                 style={{ fontWeight: "bold", fontSize: 20 }}
               >
-                {email}
+                {showEmailOfTheUser()}
+              </span>
+            </div>
+
+            {/* written posts */}
+            {/* email */}
+            <div className="email">
+              <span>Written Posts:</span>{" "}
+              <span
+                className="profile_username"
+                style={{ fontWeight: "bold", fontSize: 20 }}
+              >
+                {getNumberOfWrittenPosts()}
               </span>
             </div>
           </div>
