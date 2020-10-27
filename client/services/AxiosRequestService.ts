@@ -54,6 +54,18 @@ export class AxiosRequestService {
     return request;
   };
 
+  static getGetPostsWhereUserWroteComment = (userId: string): AxiosRequest => {
+    const request: AxiosRequest = {
+      method: "post",
+      url: Server_Routes.GET_POSTS_WHERE_USER_WROTE_COMMENT,
+      data: { userId },
+      headers: {
+        auth: getCookie("token"),
+      },
+    };
+    return request;
+  };
+
   static getAllPostsRequest = (): AxiosRequest => {
     const request: AxiosRequest = {
       method: "get",

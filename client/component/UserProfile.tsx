@@ -23,6 +23,10 @@ export const UserProfile: React.FC<UserProfileProps> = ({
 }) => {
   /* vars */
   const [posts, setPosts] = useState<Post[] | null>(null);
+  const [postsWhereUserWroteComment, setPostsWhereUserWroteComment] = useState<
+    Post[] | null
+  >(null);
+
   const loggedInUserId = getCookieContent("token").id;
 
   // listen for any changes on the redux store
@@ -36,6 +40,27 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     };
   }, []);
 
+  /* fetching the posts */
+  useEffect(() => {
+    getUsersPosts(userId);
+    getPostsWhereUserWroteComment(userId);
+  }, []);
+
+  /* getting the posts where the user wrote comments */
+
+  const getPostsWhereUserWroteComment = (userId: string) => {
+    const request = AxiosRequestService.getGetPostsWhereUserWroteComment(
+      userId
+    );
+    PostService.getPostsWhereUserWroteComment(request)
+      .then((posts) => {
+        setPostsWhereUserWroteComment(posts);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
   /* getting the posts */
   const getUsersPosts = async (userId: string) => {
     const request = AxiosRequestService.getGetPostsOfUserRequest(userId);
@@ -48,12 +73,8 @@ export const UserProfile: React.FC<UserProfileProps> = ({
       });
   };
 
-  useEffect(() => {
-    getUsersPosts(userId);
-  }, []);
-
   /* getting the number of the written posts by the user */
-  const getNumberOfWrittenPosts = () => {
+  const getNumberOfWrittenPosts = (posts: Post[] | null) => {
     if (!posts) return "-";
     return posts.length;
   };
@@ -63,19 +84,12 @@ export const UserProfile: React.FC<UserProfileProps> = ({
     if (userId === loggedInUserId) return email;
     return "*******";
   };
-  /* getting the number of the posts that this user has commented on */
   const loadedPosts = posts !== null;
 
   /* generating the markup */
-  const postsHtml = () => {
-    if (posts!.length === 0)
-      return (
-        <InfoMsg
-          color={"red"}
-          msg={username + ` has no posts`}
-          display={"block"}
-        />
-      );
+  const postsHtml = (posts: Post[] | null) => {
+    if (!posts || posts!.length === 0)
+      return <InfoMsg color={"red"} msg={"no posts"} display={"block"} />;
     return (
       <div>
         {posts?.map((e, i) => {
@@ -116,7 +130,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({
             <div className="email">
               <span>email:</span>{" "}
               <span
-                className="profile_username"
+                className="profile_email"
                 style={{ fontWeight: "bold", fontSize: 20 }}
               >
                 {showEmailOfTheUser()}
@@ -124,25 +138,39 @@ export const UserProfile: React.FC<UserProfileProps> = ({
             </div>
 
             {/* written posts */}
-            {/* email */}
-            <div className="email">
+            <div className="writtenPosts">
               <span>Written Posts:</span>{" "}
               <span
-                className="profile_username"
+                className="profile_writtenPosts"
                 style={{ fontWeight: "bold", fontSize: 20 }}
               >
-                {getNumberOfWrittenPosts()}
+                {getNumberOfWrittenPosts(posts)}
+              </span>
+            </div>
+
+            {/* posts commented on */}
+            {/* written posts */}
+            <div className="writtenPosts">
+              <span>Posts Participated On :</span>{" "}
+              <span
+                className="profile_writtenPosts"
+                style={{ fontWeight: "bold", fontSize: 20 }}
+              >
+                {getNumberOfWrittenPosts(postsWhereUserWroteComment)}
               </span>
             </div>
           </div>
         </CardContent>
       </Card>
       <div className="posts_of_user">
+        <h1>Written Posts:</h1>
         {loadedPosts ? (
-          postsHtml()
+          postsHtml(posts)
         ) : (
           <InfoMsg msg={"loading posts.."} color={"red"} display={"block"} />
         )}
+        <h1>Posts Commented On:</h1>
+        {postsHtml(postsWhereUserWroteComment)}
       </div>
     </>
   );

@@ -16,6 +16,11 @@ router.post("/addPost", [checkJwt], PostController.addPost);
 router.post("/getPostsOfUser", [checkJwt], PostController.getPostsOfUser);
 router.post("/getLimitedPosts", [checkJwt], PostController.getLimitedPosts);
 router.post("/vote", [checkJwt], PostController.vote); // vote for a post
+router.post(
+  "/getPostsWhereUserWroteComment",
+  [checkJwt],
+  PostController.getPostsWhereUserWroteComment
+);
 
 router.delete(
   "/deletePosts",

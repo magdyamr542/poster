@@ -32,6 +32,23 @@ export class PostService {
     }
   };
 
+  static getPostsWhereUserWroteComment = async (
+    request: AxiosRequest
+  ): Promise<Post[]> => {
+    try {
+      const response = await axios({
+        url: request.url,
+        method: request.method,
+        headers: request.headers,
+        data: request.data,
+      });
+      return response.data.posts as Post[];
+    } catch (e) {
+      console.log("Error getting the posts where the user wrote a comment", e);
+      return [];
+    }
+  };
+
   static addPost = async (request: AxiosRequest): Promise<Post> => {
     try {
       const response = await axios({

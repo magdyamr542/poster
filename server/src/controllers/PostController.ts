@@ -23,9 +23,23 @@ export class PostController {
     Post.findById(postId)
       .then((post) => res.status(HTTPSTATUS.SUCCESS).send({ post }))
       .catch((e) =>
-        res
-          .status(HTTPSTATUS.NOT_FOUND)
-          .send({ msg: "There is no post with suc id" })
+        res.status(HTTPSTATUS.NOT_FOUND).send({ msg: HTTPMSG.POST_NOT_FOUND })
+      );
+  };
+
+  /* getting posts where that the user commeted on*/
+  static getPostsWhereUserWroteComment = async (
+    req: Request,
+    res: Response
+  ) => {
+    const userId = req.body.userId;
+    Post.find({
+      $and: [{ "comments.userId": userId }, { userId: { $ne: userId } }], // get me all the posts which the user commented on but not their own posts
+    })
+      .sort({ createdAt: -1 })
+      .then((posts) => res.status(HTTPSTATUS.SUCCESS).send({ posts }))
+      .catch((e) =>
+        res.status(HTTPSTATUS.BAD_REQUEST).send({ msg: HTTPMSG.DB_ERROR })
       );
   };
 
@@ -102,7 +116,6 @@ export class PostController {
   /* Getting the posts to a specific user */
   static getPostsOfUser = (req: Request, res: Response) => {
     const userId: string = req.body.userId;
-    console.log(userId, "slkfjsdf");
     Post.find({ userId })
       .sort({ createdAt: -1 })
       .then((posts) => res.status(HTTPSTATUS.SUCCESS).send({ posts }))
