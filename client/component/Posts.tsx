@@ -31,7 +31,6 @@ export const Posts: React.FC<PostsProps> = ({}) => {
   useEffect(() => {
     const unsubscribe = store.subscribe(() => {
       // whenever the posts change
-      console.log(store.getState().posts.posts);
       setPosts(store.getState().posts.posts);
     });
     return unsubscribe;
