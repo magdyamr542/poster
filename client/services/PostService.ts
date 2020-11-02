@@ -66,7 +66,11 @@ export class PostService {
 
   static getLimitedPosts = async (
     request: AxiosRequest
-  ): Promise<{ posts: Post[]; currentlyAt: number }> => {
+  ): Promise<{
+    posts: Post[];
+    currentlyAt: number;
+    numberOfDocumentsLeft: number;
+  }> => {
     try {
       const response = await axios({
         url: request.url,
@@ -77,10 +81,11 @@ export class PostService {
       return {
         posts: response.data.posts as Post[],
         currentlyAt: response.data.currentlyAt,
+        numberOfDocumentsLeft: response.data.numberOfDocumentsLeft,
       };
     } catch (e) {
       console.log("Error", e);
-      return { posts: [], currentlyAt: -1 };
+      return { posts: [], currentlyAt: -1, numberOfDocumentsLeft: -1 };
     }
   };
 

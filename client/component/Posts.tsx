@@ -42,9 +42,13 @@ export const Posts: React.FC<PostsProps> = ({}) => {
   const handleLoadMorePosts = () => {
     getLimitedPosts(currentlyAt)
       .then((d) => {
+        console.log(d, "response from getting more posts");
         store.dispatch(addPosts(d.posts));
         setCurrentlyAt(d.currentlyAt);
-        setDisplayLoadMorePostsBtn(d.posts.length !== 0);
+        // check if we have more posts to be displayed
+        if (d.numberOfDocumentsLeft <= 0) {
+          setDisplayLoadMorePostsBtn(false);
+        }
       })
       .catch((e) => console.log("error from getting more posts", e));
   };

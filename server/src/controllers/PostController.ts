@@ -83,6 +83,7 @@ export class PostController {
   static getLimitedPosts = async (req: Request, res: Response) => {
     const { skip, postCount } = req.body;
 
+    const count = await Post.countDocuments({});
     Post.aggregate([
       {
         $sort: { createdAt: -1 },
@@ -95,9 +96,11 @@ export class PostController {
       },
     ])
       .then((posts) => {
-        res
-          .status(HTTPSTATUS.SUCCESS)
-          .send({ posts, currentlyAt: skip + postCount });
+        res.status(HTTPSTATUS.SUCCESS).send({
+          posts,
+          currentlyAt: skip + posts.length,
+          numberOfDocumentsLeft: count - (skip + posts.length),
+        });
       })
       .catch((e) => {
         res
