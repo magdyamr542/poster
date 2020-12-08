@@ -6,6 +6,7 @@ import { Layout } from "../../component/Layout";
 import { Post } from "../../component/Post";
 import { ProgressWithMsg } from "../../component/ProgressWithMsg";
 import { Post as PostInterface } from "../../interfaces/types";
+import { addPost } from "../../redux/actionCreators";
 import { store } from "../../redux/createStore";
 import { AxiosRequestService } from "../../services/AxiosRequestService";
 import { PostService } from "../../services/PostService";
@@ -20,6 +21,7 @@ const PostPage: NextPage<PostPageProps> = ({ id }) => {
   const getPost = async (postId: string) => {
     const postRequest = AxiosRequestService.getGetPostByIdRequest(postId);
     const _post = await PostService.getPostById(postRequest);
+    store.dispatch(addPost(_post));// saving the post that we got in the store
     setPost(_post);
   };
 

@@ -9,6 +9,8 @@ services:
     volumes:
       - ./server:/usr/src/app
     entrypoint: ./wait-for-it.sh poster_db:27017 -- npm run dev:watch #wait for the db image to be ready
+    environment: 
+         NODE_ENV: development
 
   poster_db:
     container_name: poster_db
